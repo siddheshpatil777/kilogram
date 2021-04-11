@@ -1,6 +1,10 @@
 from rest_framework import serializers
+
+from Post.models import Post
 from Profile.models import Profile
 from django.contrib.auth.models import User
+
+
 # from .models import Room
 # class RoomSerializer(serializers.ModelSerializer):
 #     class Meta:

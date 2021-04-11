@@ -10,24 +10,33 @@ import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import Typography from "@material-ui/core/Typography";
+import Navbar from "./Navbar";
 // const UserDataContext=React.createContext({username:null});
 export default class App extends Component {
     constructor(props) {
         super(props);
     }
+
     render() {
         return (
             <div className="App">
                 <UserDataContextProvider>
-                    <Route path="/"><HomePage/></Route>
-                    <Route path="/login"><LoginPage props={{...this.props}}/></Route>
+                    <Navbar/>
+                    <Switch>
+                        <Route exact path="/">
+                            <HomePage/>
+                        </Route>
+                        <Route path="/login">
+                            <LoginPage props={{...this.props}}/>
+                        </Route>
+                    </Switch>
                 </UserDataContextProvider>
             </div>
         );
     }
 }
-const appDiv = document.getElementById("app");
-render(<BrowserRouter>
-    <App/>
-</BrowserRouter>, appDiv);
+// const appDiv = document.getElementById("app");
+// render(<BrowserRouter>
+//     <App/>
+// </BrowserRouter>, appDiv);
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useContext} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -8,7 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import {Link} from "react-router-dom";
 import {UserDataContext} from "../contexts/UserDataContext";
-import Logout from './Logout';
+import LogoutButton from './LogoutButton';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -41,31 +41,29 @@ export default function NavBar() {
     //     });
     // }
 
+    const {username}=useContext(UserDataContext);
+    let loginLogoutButton;
+    if (username === null) {
+        loginLogoutButton = <Link to="/login"><Button color="inherit">Login</Button></Link>;
+
+    } else {
+        loginLogoutButton =<LogoutButton/>
+    }
     return (
-        <UserDataContext.Consumer>{(context) => {
-            let loginLogoutButton;
-            if (context.username === null) {
-                loginLogoutButton = <Link to="/login"><Button color="inherit">Login</Button></Link>;
+        <div className={classes.root}>
+            <AppBar position="static">
+                <Toolbar>
+                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                        <MenuIcon/>
+                    </IconButton>
+                    <Typography variant="h6" className={classes.title}>{username}
+                    </Typography>
 
-            } else {
-                loginLogoutButton = <Link to="/"><Button color="inherit" onClick={Logout}>LogOut</Button></Link>
-            }
-            return (
-                <div className={classes.root}>
-                    <AppBar position="static">
-                        <Toolbar>
-                            <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                                <MenuIcon/>
-                            </IconButton>
-                            <Typography variant="h6" className={classes.title}>
-                                {context.username}
-                            </Typography>
+                    {loginLogoutButton}
+                </Toolbar>
+            </AppBar>
+        </div>
 
-                            {loginLogoutButton}
-                        </Toolbar>
-                    </AppBar>
-                </div>);
-        }}</UserDataContext.Consumer>
 
     );
 }

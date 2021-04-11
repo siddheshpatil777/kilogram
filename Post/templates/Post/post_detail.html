@@ -1,0 +1,174 @@
+{% load mathfilters %}
+{% load static %}
+
+
+<div id="modal1">
+
+    <style media="screen">
+        /* .circular--portrait {
+  position: relative;
+  width: auto;
+  height: 40px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.circular--portrait img {
+  width: 100%;
+  height: auto;
+} */
+        .circular--square {
+            border-radius: 50% !important;
+        }
+
+        .circular--landscape {
+            margin: 4vh;
+            display: inline-block;
+            position: relative;
+            max-width: 10vh;
+            max-height: 10vh;
+            /* width: 200px; */
+            height: 10vh;
+            overflow: hidden;
+            border-radius: 50%;
+        }
+
+        .circular--landscape img {
+
+            width: auto;
+            height: 100%;
+            /* margin-left: -50px; */
+        }
+
+        #mainContentCard {}
+
+        @media screen and (min-width: 600px) {
+            #comment-section {
+                /* max-height: fit-content; */
+                max-height: 50vh;
+                overflow-y: scroll;
+            }
+        }
+
+        #intro {
+            max-height: 30vh;
+            width: auto;
+            /* margin: auto; */
+        }
+    </style>
+    <div class="conatiner">
+        <div class=" row">
+            <div class="col s12 m8">
+                <div id="mainContentCard" class="card">
+                    <div class="card-content">
+                        <div class="row">
+                            <div class="col s10 l10 ">
+                                <h2>{{ object.title }}</h2>
+
+                            </div>
+
+                            <div class="col s1 l1 ">
+                                <div class="center-align">
+                                    <div id="like-section"> {% include 'Post/like-section.html' %} </div>
+                                </div>
+
+                            </div>
+                            <div class="col s1 l1 ">
+                                <div class="right-align">
+                                    {% if object.author == user %}
+                                    <span class="card-title activator grey-text text-darken-4"><i
+                                            class="material-icons right">more_vert</i></span>
+                                    {% endif %}
+                                </div>
+
+                            </div>
+                        </div>
+                        <a class="mr-2" href="{% url 'profile' slug=object.author.username %}">{{ object.author }}</a>
+                        <p class="right">{{ object.date_posted }}</p>
+
+
+                        <p>
+                            {% for tag in tags %}
+                            <a href="{% url 'explore-tag' tag %}"> #{{tag}} </a>
+                            {% endfor %}
+                        </p>
+                        <p class="article-content">{{ object.content|safe }}</p>
+                        <p> Views: {{object.views.count}} </p>
+                        {% include "Post/poll_detail.html" %}
+
+                        {% if object.type == 1%}
+                        <div class="row">
+                            <div class="col s6 offset-s3">
+                                <video class="center" id="intro" type="video/mp4" controls preload autoplay>
+                                    <source class="center"  src="{{ vpost.video.url }}" type="video/mp4">
+                                </video>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="card-reveal">
+                        {% if object.author == user %}
+                        <span class="card-title grey-text text-darken-4">What to do<i
+                                class="material-icons right">close</i></span>
+
+                        <a class="btn btn-large orange waves-effect waves-light red"
+                            href="{%url 'post-update' object.id%}">Update </a>
+                        <a class="btn btn-large red waves-effect waves-light red"
+                            href="{%url 'post-delete' object.id%}">
+                            Delete </a>
+                       
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m4">
+
+                <div id="comment-section">
+                    <ul class="collection">
+                        {% for comment in comments %}
+                        {% include 'Post/homePageMembers/commentCardSmall.html' %}
+                        {% endfor %}
+                    </ul>
+
+                </div>
+                <form class="post-form" id="{{object.id}}">
+
+                    {%csrf_token%}
+
+                    <div class="input-field">
+                        <i class="material-icons prefix">message</i>
+                        <textarea id="id_content" class="materialize-textarea" cols="20" rows="20"></textarea>
+                        <label for="message">Your Message</label>
+                    </div>
+
+                    <div class="input-field center">
+                        <button id="sendButton" class="btn" type="submit">Submit</button>
+                    </div>
+                </form>
+
+                <!-- <ul class="collapsible">
+                <li>
+                    <div class="collapsible-header"><i class="material-icons">filter_drama</i>Continue the Conversation
+                    </div>
+                    <div class="collapsible-body"> -->
+
+
+                <!-- </div>
+                </li>
+            </ul> -->
+            </div>
+        </div>
+
+
+
+
+
+
+    </div>
+
+
+
+
+
+</div>

@@ -1,9 +1,10 @@
 from rest_framework import serializers
 from .models import Profile
 from django.contrib.auth.models import User
+# class LoginUserSerializer(serializers.ModelSerializer):
 class LoginUserSerializer(serializers.ModelSerializer):
-    # username = serializers.CharField(validators=[])
-    # password = serializers.CharField(validators=[])
+    username = serializers.CharField(validators=[])
+    password = serializers.CharField(validators=[])
     class Meta:
         model = User
         fields = ('username', 'password','id')

@@ -1,47 +1,49 @@
 import React, {Component} from 'react';
+import fetchUserName from "../components/fetchers/fetchUserName";
 
 export const UserDataContext = React.createContext({
-        username: "sisdd",
-        theme: 'dark',
-    });
+    username: "sisdd",
+    theme: 'dark',
+});
 
 class UserDataContextProvider extends Component {
+
+    // setUserName=(username)=>{this.setState({username: username});}
+    //         setUserName:this.setUserName,
+
     state = {
-        username: "sisdd",
+        username: null,
         theme: 'dark',
+        updateUserName: null,
+        setUserName:null
     }
-    constructor(props){
+
+    constructor(props) {
         super(props);
-
-
+        this.updateUserName=this.updateUserName.bind(this);
+        this.setUserName=this.setUserName.bind(this);
     }
-    componentWillMount(){
-         fetch("/api/currentInfo", {
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            },
-        }).then((response) => {
 
-            if (response.ok) {
-                return response.json();
-            }
-            return {username: null,};
-        }).then((data) => {
-            console.log(data);
-            if (data) {
-                this.setState({
-                    username: data.username,
-                });
-            }
-        }).catch(error => {
-            console.log(error);
-            // return error;
+    componentDidMount() {
+        this.setState({
+            updateUserName: this.updateUserName,
+            setUserName:this.setUserName
         });
     }
 
-
-    render(){
+    async updateUserName() {
+        let username = fetchUserName();
+        // let username = "sid";
+        this.setState({
+            username: username,
+        });
+    }
+    async setUserName(username) {
+        this.setState({
+            username: username,
+        });
+    }
+    render() {
         return (
             <UserDataContext.Provider value={{...this.state}}>
                 {this.props.children}

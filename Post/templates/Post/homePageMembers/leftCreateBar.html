@@ -1,0 +1,29 @@
+<div class="card blue-grey darken-4">
+    <div class="card-content">
+        
+        <div class="row center">
+            
+            {% if user.is_authenticated%}
+            <h3 class="white-text" >Create</h3>
+            <!-- <a class=" col s12 btn btn-large deep-purple darken-1 waves-effect white-text text-darken-4 center  waves-effect waves-light"> 
+            </a> -->
+            <a href="{% url 'post-create' type=0%} "
+                class="col s12 btn btn-large deep-purple darken-1 waves-effect white-text text-darken-4 center  waves-effect waves-light"> Posts!
+            </a>
+            <a href="{% url 'post-create' type=1%} "
+                class="col s12  btn btn-large deep-purple darken-1 waves-effect    white-text text-darken-4 center  waves-effect waves-light"> Video!
+            </a>
+            <a href="{% url 'poll_create' %} "
+                class=" col s12  btn btn-large deep-purple darken-1 waves-effect 	white-text text-darken-4 center  waves-effect waves-light"> Polls!
+            </a>
+            <br>
+            <a href="{% url 'create_group' %} "
+                class=" col s12  btn btn-large deep-purple darken-1 waves-effect	white-text text-darken-4 center  waves-effect waves-light"> Group
+            </a>
+            <br>
+            {% endif %}
+           
+        </div>
+        
+    </div>
+</div>

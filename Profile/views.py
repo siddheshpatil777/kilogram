@@ -13,10 +13,11 @@ import json
 # def LoginUser(request)
 @api_view(['POST', ])
 def logoutFunc(request):
+    print("got logout" )
     if request.user.is_authenticated:
         logout(request)
         return Response({'taskCompleted':True,'message':"logged out succesFully"},status=status.HTTP_200_OK)
-    Response({'taskCompleted': False, 'message': "how the fuck are you supposed to log out"}, status=status.HTTP_200_OK)
+    return Response({'taskCompleted': False, 'message': "how the fuck are you supposed to log out"}, status=status.HTTP_200_OK)
 
 
 @api_view(['POST', ])
@@ -39,7 +40,6 @@ def loginFunc(request):
         return Response({'message': 'Access Granted'}, status=status.HTTP_200_OK)
     else:
         print('Access Denied')
-
         return Response({'Bad request': 'Access Denied'}, status=status.HTTP_403_FORBIDDEN)
 class LoginUserView(APIView):
     serializer_class = LoginUserSerializer
