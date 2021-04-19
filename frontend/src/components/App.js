@@ -21,6 +21,7 @@ export default class App extends Component {
         return (
             <div className="App">
                 <UserDataContextProvider>
+
                     <Navbar/>
                     <Switch>
                         <Route exact path="/">

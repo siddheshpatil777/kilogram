@@ -1,9 +1,10 @@
+import json
 from json import loads, load
 
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.response import Response
 
-from Post.models import Post
+from Post.models import Post, Comment
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from rest_framework import generics, status
 
@@ -24,15 +25,16 @@ official_tag = ['official', 'avishkar', 'freshers']
 
 class PostDetailView(ListCreateAPIView):
     serializer_class = PostDetailSerializer
+
     def get(self, request, format="None"):
         # requestData = loads(request.body)
         # id=requestData['id']
-        id=999
-        post_query=Post.objects.filter(id=id)
-        if(len(post_query)==0):
-            return JsonResponse({'ERROR':'The Post does not exist'},status=status.HTTP_404_NOT_FOUND)
-        post=post_query[0]
-        return Response(self.serializer_class(post).data,status=status.HTTP_200_OK)
+        id = 999
+        post_query = Post.objects.filter(id=id)
+        if (len(post_query) == 0):
+            return JsonResponse({'ERROR': 'The Post does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        post = post_query[0]
+        return Response(self.serializer_class(post).data, status=status.HTTP_200_OK)
 
     def get(self, request, format="None"):
         # requestData = loads(request.body)
@@ -44,60 +46,75 @@ class PostDetailView(ListCreateAPIView):
         post = post_query[0]
         return Response(self.serializer_class(post).data, status=status.HTTP_200_OK)
 
+
+class PostListView(generics.ListCreateAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostDetailSerializer
+
+    def list(self, request):
+        # Note the use of `get_queryset()` instead of `self.queryset`
+        queryset = self.get_queryset()
+        serializer = PostDetailSerializer(queryset, many=True)
+        return Response(serializer.data)
+def commentSection(request):
+    data = json.loads(request.body)
+    post_id=data['post_id']
+    Comment.objects.all().filter(post=post_id)
+
 # @api_view(['GET', ])
-def PostListView(request):
-    # queryset = User.objects.all()
+# def PostListView(request):
+#     # queryset = User.objects.all()
+#
+#
+#
+#     # if request.user.is_authenticated:
+#     # print(list(request.GET))
+#     # request.get('post_from')
+#     # requestData = load(request.body)
+#     # body_unicode = request.body.decode('utf-8')
+#     # body = loads(body_unicode)
+#     # requestData = loads(body)
+#     # print(requestData)
+#     print(request.body)
+#     requestData = loads(request.body)
+#     # page_number = requestData['page_number']
+#     #
+#     post_from = 0
+#     post_from = requestData['post_from']
+#     if (post_from < 0):
+#         return JsonResponse({'ERROR': 'post_from is less than 0'}, status=status.HTTP_400_BAD_REQUEST)
+#     post_till = 2
+#     post_till = requestData['post_till']
+#     if (post_till < 0):
+#         return JsonResponse({'ERROR': 'post_till is less than 0'}, status=status.HTTP_400_BAD_REQUEST)
+#     # page_number = requestData['page_number']
+#     # page_number = requestData['page_number']
+#     posts = Post.objects.filter().order_by('-date_posted')[
+#             max(0, post_from):min(len(Post.objects.all()), max(post_till, 0))]
+#     # posts = Post.objects.all()
+#     serializer = PostDetailSerializer(posts, many=True)
+#     return Response(serializer.data, status=status.HTTP_200_OK)
+# paginator= Paginator(posts,10)
+# page_number = request.GET.get('page')
+# page_obj=paginator.get_page(page_number)
 
-
-
-    # if request.user.is_authenticated:
-    # print(list(request.GET))
-    # request.get('post_from')
-    # requestData = load(request.body)
-    # body_unicode = request.body.decode('utf-8')
-    # body = loads(body_unicode)
-    # requestData = loads(body)
-    # print(requestData)
-    print(request.body)
-    requestData = loads(request.body)
-    # page_number = requestData['page_number']
-    #
-    post_from = 0
-    post_from = requestData['post_from']
-    if (post_from < 0):
-        return JsonResponse({'ERROR': 'post_from is less than 0'}, status=status.HTTP_400_BAD_REQUEST)
-    post_till = 2
-    post_till = requestData['post_till']
-    if (post_till < 0):
-        return JsonResponse({'ERROR': 'post_till is less than 0'}, status=status.HTTP_400_BAD_REQUEST)
-    # page_number = requestData['page_number']
-    # page_number = requestData['page_number']
-    posts = Post.objects.filter().order_by('-date_posted')[
-            max(0, post_from):min(len(Post.objects.all()), max(post_till, 0))]
-    # posts = Post.objects.all()
-    serializer = PostDetailSerializer(posts, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-    # paginator= Paginator(posts,10)
-    # page_number = request.GET.get('page')
-    # page_obj=paginator.get_page(page_number)
-
-    # tags = Tag.objects.all
-    # groups = Group.objects.all
-    #
-    # form1 = SearchForm(request.POST)
-    # context = {
-    # 'posts' : posts,
-    # 'groups' : groups,
-    # 'tags' : tags,
-    # 'form' : form1,
-    # 'page_obj':page_obj,
-    # }
-    # if request.user.is_authenticated:
-    #     aposts = posts.filter(tags__name__in=official_tag).filter(tags__in=request.user.profile.tags.all()).distinct()
-    #     paginator = Paginator(aposts,10)
-    #     aposts = paginator.get_page(request.GET.get('page'))
-    #     context['aposts'] = aposts
-    # return render(request, 'Post/home.html', context)
+# tags = Tag.objects.all
+# groups = Group.objects.all
+#
+# form1 = SearchForm(request.POST)
+# context = {
+# 'posts' : posts,
+# 'groups' : groups,
+# 'tags' : tags,
+# 'form' : form1,
+# 'page_obj':page_obj,
+# }
+# if request.user.is_authenticated:
+#     aposts = posts.filter(tags__name__in=official_tag).filter(tags__in=request.user.profile.tags.all()).distinct()
+#     paginator = Paginator(aposts,10)
+#     aposts = paginator.get_page(request.GET.get('page'))
+#     context['aposts'] = aposts
+# return render(request, 'Post/home.html', context)
 # else:
 #     return render(request,'intro.html')
 

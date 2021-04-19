@@ -1,24 +1,48 @@
+import json
+
 from django.shortcuts import render
-from django.http import HttpResponse,JsonResponse
+from django.http import HttpResponse, JsonResponse
 from rest_framework import generics, status
 # from .models import Room
 # from .serializers import RoomSerializer, CreateRoomSerializer, UpdateRoomSerializer, GetMyInfoSerializer
+from rest_framework.generics import ListCreateAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from Post.models import Comment, Post
+from Post.serializers import CommentSerializer
 from .serializers import GetMyInfoSerializer
+
 
 # Create your views here.
 def main(request):
     return HttpResponse("Hello")
+
+
 class GetMyInfo(APIView):
     def get(self, request, format=None):
         # return Response({'username': 'sid'}, status=status.HTTP_200_OK);
-
         if request.user.is_authenticated:
-            response= Response(GetMyInfoSerializer(request.user).data,status=status.HTTP_200_OK)
-            response['Access-Control-Allow-Origin']='*'
-            return response;
-        return Response({'username':'null'}, status=status.HTTP_400_BAD_REQUEST);
+            response = Response(GetMyInfoSerializer(request.user).data, status=status.HTTP_200_OK)
+            response['Access-Control-Allow-Origin'] = '*'
+            return response
+        return Response({'username': 'null'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CommentListView(ListCreateAPIView):
+    serializer_class = CommentSerializer
+    queryset=Comment.objects.all()
+    def list(self, request):
+        # Note the use of `get_queryset()` instead of `self.queryset`
+        # data = json.loads(request.body)
+        # post = data['post']
+        # queryset = Comment.objects.all().filter(post=post)
+
+        post=Post.objects.all().filter(title="electron").first()
+        post_id=post.id
+        queryset = self.get_queryset().filter(post=post)
+
+        serializer = CommentSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 #
 # class RoomView(generics.ListAPIView):

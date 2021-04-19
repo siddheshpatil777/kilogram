@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 # from Tag.models import Tag
 # from Group.models import Channel
-
+from mptt.models import TreeForeignKey,MPTTModel
 # Create your models here.
 class Post(models.Model):
 	title = models.CharField(max_length=100)
@@ -13,6 +13,7 @@ class Post(models.Model):
 	author = models.ForeignKey(User, on_delete=models.CASCADE)
 	views = models.ManyToManyField(User, related_name='post_views', blank = True)
 	likers = models.ManyToManyField(User, related_name = 'likers', blank = True)
+	image = models.ImageField(upload_to='images/',default="images/temp.png")
 	# tags = models.ManyToManyField(Tag, related_name = 'tags', blank = True)
 	# type = models.IntegerField(default=0)
 	# def get_absolute_url(self):
@@ -23,12 +24,17 @@ class Post(models.Model):
 # class GroupPost(Post):
 # 	parentchannel = models.ForeignKey(Channel, related_name = "parent_channel", on_delete=models.CASCADE)
 
-# class Comment(models.Model):
-# 	content = models.TextField()
-# 	date_posted = models.DateTimeField(default=timezone.now)
-# 	author = models.ForeignKey(User, on_delete=models.CASCADE)
-# 	post = models.ForeignKey(Post, on_delete=models.CASCADE)
-# 	likes = models.ManyToManyField(User, related_name = 'likes', blank = True)
+class Comment(MPTTModel):
+	content = models.TextField()
+	date_posted = models.DateTimeField(default=timezone.now)
+	post = models.ForeignKey(Post, on_delete=models.CASCADE)
+	author = models.ForeignKey(User, on_delete=models.CASCADE)
+	parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True,blank=True, related_name='children')
+
+	# class MPTTMeta:
+		# level_attr = 'mptt_level'
+		# order_insertion_by = ['order']
+
 #
 # 	def get_absolute_url(self):
 # 		return reverse('post-detail', kwargs = {'pk':self.post.pk})

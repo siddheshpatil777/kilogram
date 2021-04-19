@@ -6,7 +6,7 @@ from Post.models import Post
 class PostDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model=Post
-        fields = ('title', 'content', 'date_posted', 'author', 'views', 'likers')
+        fields = ('id','title', 'image','content', 'date_posted', 'author', 'views', 'likers')
     def create(self, validated_data):
         return Post.objects.create(**validated_data)
 
@@ -15,6 +15,28 @@ class PostDetailSerializer(serializers.ModelSerializer):
         instance.content = validated_data.get('content', instance.content)
         instance.save()
         return instance
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = ('id','content', 'date_posted', 'author', )
+
+    def to_representation(self, instance):
+        """Convert `username` to lowercase."""
+        ret = super().to_representation(instance)
+        ret['post_id'] =instance.post.id
+        if(instance.parent):
+            ret['parent'] = instance.parent.id
+        else:
+            ret['parent'] = 0
+
+        return ret
+# class HighScoreSerializer(serializers.BaseSerializer):
+#
+#     def to_representation(self, instance):
+#         return {
+#             'score': instance.score,
+#             'player_name': instance.player_name
+#         }
 # from .models import Room
 # class RoomSerializer(serializers.ModelSerializer):
 #     class Meta:
