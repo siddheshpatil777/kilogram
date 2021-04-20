@@ -19,7 +19,7 @@ import postCardImage from './temp.png';
 import CommentSection from './CommentSection';
 const useStyles = makeStyles((theme) => ({
     root: {
-        maxWidth: 345,
+        maxWidth: 1345,
     },
     media: {
         height: 0,

@@ -32,40 +32,35 @@ const HomePage = () => {
 
             <Grid
                 container
-                spacing={2}
+                spacing={1}
                 // justify="flex-around"
             >
                 <Grid
                     container
                     xs={3}
                 />
-                <Grid
-                    container
-                    xs={6}
-                    spacing={3}
-                    justify="space-evenly"
-                >
-                    <Grid item xs={12} sm={6}>
-                    </Grid>
+                {/*<Grid*/}
+                {/*    container*/}
+                {/*    xs={12}*/}
+                {/*    spacing={3}*/}
+                {/*    justify="space-evenly"*/}
+                {/*>*/}
+                    {/*<Grid item xs={12} sm={6}>*/}
+                    {/*</Grid>*/}
                     {/*{ !isPending && console.log(data)}*/}
 
-                    {data && data.map(function (postCard) {
+
+
+
+                {/*</Grid>*/}
+                  {data && data.map(function (postCard) {
                         // console.log(postCard);
                         return (
-                            <Grid item xs={12} sm={6} key={postCard.id}>
+                            <Grid item xs={12} sm={12} key={postCard.id}>
                                 <PostCard data={postCard}/>
                             </Grid>
                         )
                     })}
-
-                    {/**/}
-                    {/*<Grid item xs={12} sm={6}>*/}
-                    {/*    <PostCard/>*/}
-                    {/*</Grid>*/}
-                    {/*<Grid item xs={12} sm={6}>*/}
-                    {/*    <PostCard/>*/}
-                    {/*</Grid>*/}
-                </Grid>
             </Grid>
         </div>
 
