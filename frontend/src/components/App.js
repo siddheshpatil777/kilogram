@@ -11,6 +11,7 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import Typography from "@material-ui/core/Typography";
 import Navbar from "./Navbar";
+import Register from "./Register";
 // const UserDataContext=React.createContext({username:null});
 export default class App extends Component {
     constructor(props) {
@@ -27,9 +28,13 @@ export default class App extends Component {
                         <Route exact path="/">
                             <HomePage/>
                         </Route>
-                        <Route path="/login">
+                        <Route exact path="/login">
                             <LoginPage props={{...this.props}}/>
                         </Route>
+                        <Route exact path="/register">
+                            <Register />
+                        </Route>
+
                     </Switch>
                 </UserDataContextProvider>
             </div>

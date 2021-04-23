@@ -1,7 +1,7 @@
 import {useState, useEffect} from 'react';
 import CSRFToken from "./csrftoken";
 
-const useFetch = (url, method) => {
+const useFetch = (url, method,sendData={}) => {
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
     const [isPending, setIsPending] = useState(true);
@@ -14,6 +14,7 @@ const useFetch = (url, method) => {
             if (method === "GET") {
                 options = {
                     signal: abortCont.signal,
+                    body:sendData,
                 };
             } else if (method === "POST") {
                 options = {
@@ -23,6 +24,8 @@ const useFetch = (url, method) => {
                         "Content-Type": 'application/json',
                         'X-CSRFToken': CSRFToken(),
                     },
+                    body:sendData,
+
                 };
             }
             fetch(url, options)

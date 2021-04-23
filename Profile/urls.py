@@ -1,10 +1,11 @@
 from django.urls import path
-from .views import LoginUserView,loginFunc,logoutFunc
+from .views import LoginUserView,loginFunc,logoutFunc,register
 
 
 urlpatterns = [
     path('login',loginFunc),
     path('logout',logoutFunc),
+    path('register',register),
 ]
 # path('home', RoomView.as_view()),
 # path('create-room', CreateRoomView.as_view()),

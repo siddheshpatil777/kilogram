@@ -6,7 +6,9 @@ from Post.views import PostListView
 urlpatterns = [
     path('currentInfo', GetMyInfo.as_view()),
     path('posts', PostListView.as_view()),
-    path('commentSection', CommentListView.as_view())
+    path('checkEmailExistence', CommentListView.as_view()),
+    path('checkUserNameExistence', CommentListView.as_view()),
+
 ]
 # path('home', RoomView.as_view()),
 # path('create-room', CreateRoomView.as_view()),

@@ -1,4 +1,4 @@
-import React,{useContext} from 'react';
+import React, {useContext} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -41,14 +41,15 @@ export default function NavBar() {
     //     });
     // }
 
-    const {username}=useContext(UserDataContext);
+    const {username} = useContext(UserDataContext);
     let loginLogoutButton;
     if (username === null) {
         loginLogoutButton = <Link to="/login"><Button color="inherit">Login</Button></Link>;
 
     } else {
-        loginLogoutButton =<LogoutButton/>
+        loginLogoutButton = <LogoutButton/>
     }
+    const registerButton = <Link to="/register"><Button color="inherit">Register</Button></Link>
     return (
         <div className={classes.root}>
             <AppBar position="static">
@@ -59,7 +60,17 @@ export default function NavBar() {
                     <Typography variant="h6" className={classes.title}>{username}
                     </Typography>
 
-                    {loginLogoutButton}
+
+                    {username === null &&
+                    <div>
+                        <Link to="/login"><Button color="secondary">Login</Button></Link>
+
+                        <Link to="/register"><Button color="secondary">Register</Button></Link>
+                    </div>
+                    }
+                    {username &&
+                    <LogoutButton/>
+                    }
                 </Toolbar>
             </AppBar>
         </div>
