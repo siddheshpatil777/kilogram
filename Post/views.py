@@ -44,7 +44,7 @@ class PostDetailView(ListCreateAPIView):
         if (len(post_query) == 0):
             return JsonResponse({'ERROR': 'The Post does not exist'}, status=status.HTTP_404_NOT_FOUND)
         post = post_query[0]
-        return Response(self.serializer_class(post).data, status=status.HTTP_200_OK)
+        return JsonResponse(self.serializer_class(post).data, status=status.HTTP_200_OK)
 
 
 class PostListView(generics.ListCreateAPIView):
@@ -55,7 +55,15 @@ class PostListView(generics.ListCreateAPIView):
         # Note the use of `get_queryset()` instead of `self.queryset`
         queryset = self.get_queryset()
         serializer = PostDetailSerializer(queryset, many=True)
+        # return JsonResponse(serializer.data)
         return Response(serializer.data)
+       #  if(request.user.is_authenticated):
+       #      queryset = self.get_queryset()
+       #      serializer = PostDetailSerializer(queryset, many=True)
+       #      return J(serializer.data,status=)
+       # else:
+       #  return Response()
+
 def commentSection(request):
     data = json.loads(request.body)
     post_id=data['post_id']

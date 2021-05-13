@@ -1,11 +1,11 @@
 from django.core.exceptions import ValidationError
 from django.shortcuts import render
-from django.http import HttpResponse,JsonResponse
+from django.http import HttpResponse, JsonResponse
 from rest_framework import generics, status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 import re
@@ -13,31 +13,50 @@ from .models import Profile
 from .serializers import LoginUserSerializer
 import json
 from django.core.validators import validate_email
+
+
 # from django.contrib.auth.decorators import
 # def LoginUser(request)
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+def validateEmail( email ):
+    try:
+        validate_email( email )
+        return True
+    except ValidationError:
+        return False
 
-@api_view(['GET', ])
 def checkEmailExistence(request):
-    data = json.loads(request.body)
-    email = data['email']
-    query_set=User.objects.all().filter(email=email)
-    if(len(query_set)==0):
-        return JsonResponse({'emailValid': True, 'message': "This email is valid"}, status=status.HTTP_200_OK)
-    else:
-        return JsonResponse({'emailValid': False, 'message': "This email is already Used"}, status=status.HTTP_200_OK)
+    email = request.GET['email']
+    query_set = User.objects.all().filter(email=email)
+    # print(query_set)
+    if (validateEmail(email)==True and len(query_set) == 0):
+        print("check Email Existence request " + email +" valid")
 
-@api_view(['GET', ])
+        return JsonResponse({'value': True, 'message': "This email is valid"}, status=status.HTTP_200_OK)
+    else:
+        print("check Email Existence request " + email +" not valid")
+
+        return JsonResponse({'value': False, 'message': "This email is already Used"}, status=status.HTTP_200_OK)
+
+
 def checkUsernameExistence(request):
-    data = json.loads(request.body)
-    username = data['username']
-    query_set=User.objects.all().filter(username=username)
-    if(len(query_set)==0):
-        return JsonResponse({'usernameValid': True, 'message': "This username is valid"}, status=status.HTTP_200_OK)
+
+    # print(request.GET['username'])
+    # print(request.query_params)
+    # return JsonResponse({'value': True, 'message': "This username is valid"}, status=status.HTTP_200_OK)
+    # data = json.loads(request.body)
+    username = request.GET['username']
+    if(username==""):
+        print("not valid")
+        return JsonResponse({'value': False, 'message': "This username is already Used"}, status=status.HTTP_200_OK)
+    query_set = User.objects.all().filter(username=username)
+    if (len(query_set) == 0):
+        print("checkUsernameExistence request "+username +" valid")
+        return JsonResponse({'value': True, 'message': "This username is valid"}, status=status.HTTP_200_OK)
     else:
-        return JsonResponse({'usernameValid': False, 'message': "This username is already Used"}, status=status.HTTP_200_OK)
-
-
-
+        print("checkUsernameExistence request " + username + " not valid")
+        return JsonResponse({'value': False, 'message': "This username is already Used"}, status=status.HTTP_200_OK)
 
 
 # @api_view(['POST', ])
@@ -50,13 +69,13 @@ def register(request):
     print(request.body)
     data = json.loads(request.body)
     username = data['username']
-    username.replace(' ','')
+    username.replace(' ', '')
     email = data['email']
     password = data['password']
     gender = data['gender']
     try:
-        query_set=User.objects.all().filter(username=username)
-        if(len(query_set)>0):
+        query_set = User.objects.all().filter(username=username)
+        if (len(query_set) > 0):
             JsonResponse({'success': False, 'message': "User Name Already exists"}, status=status.HTTP_200_OK)
         query_set = User.objects.all().filter(email=email)
         if (len(query_set) > 0):
@@ -78,19 +97,22 @@ def register(request):
 
         return JsonResponse({'success': False, 'message': "User not Registered"}, status=status.HTTP_200_OK)
 
+
 @api_view(['POST', ])
 def logoutFunc(request):
-    print("got logout" )
+    print("got logout")
     if request.user.is_authenticated:
         logout(request)
-        return  JsonResponse({'taskCompleted':True,'message':"logged out succesFully"},status=status.HTTP_200_OK)
-    return JsonResponse({'taskCompleted': False, 'message': "how the fuck are you supposed to log out"}, status=status.HTTP_200_OK)
+        return JsonResponse({'taskCompleted': True, 'message': "logged out succesFully"}, status=status.HTTP_200_OK)
+    return JsonResponse({'taskCompleted': False, 'message': "how the fuck are you supposed to log out"},
+                        status=status.HTTP_200_OK)
 
 
 @api_view(['POST', ])
 def loginFunc(request):
+
     if request.user.is_authenticated:
-        return JsonResponse({'Bad request': 'Access already granted'}, status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse({'success': False,'message': 'Bad request Access already granted'}, status=status.HTTP_200_OK)
     data = json.loads(request.body)
     print('got login post')
     # username = serializer.data.get('username')
@@ -104,12 +126,15 @@ def loginFunc(request):
     if user is not None:
         login(request, user)
         print('Access Granted')
-        return JsonResponse({'message': 'Access Granted'}, status=status.HTTP_200_OK)
+        return JsonResponse({'success':True,'message': 'Access Granted'}, status=status.HTTP_200_OK)
     else:
         print('Access Denied')
-        return JsonResponse({'Bad request': 'Access Denied'}, status=status.HTTP_403_FORBIDDEN)
+        return JsonResponse({'success':False,'message':'Bad request Access Denied'}, status=status.HTTP_200_OK)
+
+
 class LoginUserView(APIView):
     serializer_class = LoginUserSerializer
+
     def post(self, request, format=None):
         # if not self.request.session.exists(self.request.session.session_key):
         #     self.request.session.create()
@@ -118,20 +143,20 @@ class LoginUserView(APIView):
         # serializer = self.serializer_class(data=request.body)
         # if(serializer.is_valid()==False):
         #     return JsonResponse({'Bad request': 'Serializer failed'}, status=status.HTTP_400_BAD_REQUEST)
-        data=json.loads(request.body)
+        data = json.loads(request.body)
         print('got login post')
         # username = serializer.data.get('username')
         # password = serializer.data.get('password')
         # username=request.data.get('username')
         # password = request.data.get('password')
-        username=data['username']
-        password=data['password']
-        user = authenticate(request,username=username, password=password)
-        print(username,password)
+        username = data['username']
+        password = data['password']
+        user = authenticate(request, username=username, password=password)
+        print(username, password)
         if user is not None:
             login(request, user)
             print('Access Granted')
-            return JsonResponse({'message':'Access Granted'}, status=status.HTTP_200_OK)
+            return JsonResponse({'message': 'Access Granted'}, status=status.HTTP_200_OK)
         else:
             print('Access Denied')
 

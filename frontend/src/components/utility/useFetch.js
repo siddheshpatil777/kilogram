@@ -20,6 +20,7 @@ const useFetch = (url, method,sendData={}) => {
                 options = {
                     signal: abortCont.signal,
                     method: 'POST',
+
                     headers: {
                         "Content-Type": 'application/json',
                         'X-CSRFToken': CSRFToken(),

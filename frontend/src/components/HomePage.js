@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import Navbar from './Navbar';
 import UserDataContext from "../contexts/UserDataContext";
-import useFetch from "./useFetch";
+import useFetch from "./utility/useFetch";
 import PostCard from "./PostCard"
 import {Grid} from "@material-ui/core";
 import Paper from '@material-ui/core/Paper';

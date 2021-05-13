@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {render} from 'react-dom';
 import HomePage from "./HomePage";
-import LoginPage from "./LoginPage";
+import LoginPage from "./auth/LoginPage";
 import {BrowserRouter} from "react-router-dom";
 import {Link, Route, Switch} from "react-router-dom";
 import UserDataContextProvider, {UserDataContext} from '../contexts/UserDataContext';
@@ -11,7 +11,7 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import Typography from "@material-ui/core/Typography";
 import Navbar from "./Navbar";
-import Register from "./Register";
+import Register from "./auth/Register";
 // const UserDataContext=React.createContext({username:null});
 export default class App extends Component {
     constructor(props) {

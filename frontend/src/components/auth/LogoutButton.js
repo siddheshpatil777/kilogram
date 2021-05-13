@@ -1,8 +1,8 @@
 import React, {Component, useState, useContext} from 'react';
 import {TextField, FormControl, FormHelperText, Grid, Button, Input} from "@material-ui/core";
 // import DjangoCSRFToken from 'django-react-csrftoken'
-import {UserDataContext} from "../contexts/UserDataContext";
-import CSRFToken from './csrftoken';
+import {UserDataContext} from "../../contexts/UserDataContext";
+import CSRFToken from '../utility/csrftoken';
 import {Link} from "react-router-dom";
 
 const LogoutButton = (props) => {

@@ -78,7 +78,7 @@ export default function PostCard({data}) {
                 </Typography>
             </CardContent>
             <CardActions disableSpacing>
-                <IconButton aria-label="add to favorites">
+                <IconButton aria-label="add to favorites" color="#">
                     <FavoriteIcon/>
                 </IconButton>
                 <IconButton aria-label="share">

@@ -1,4 +1,4 @@
-import useFetch from "./useFetch";
+import useFetch from "./utility/useFetch";
 import BASE_URL from "./METADATA";
 import MyComment from "./MyComment";
 

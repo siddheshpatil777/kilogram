@@ -8,7 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import {Link} from "react-router-dom";
 import {UserDataContext} from "../contexts/UserDataContext";
-import LogoutButton from './LogoutButton';
+import LogoutButton from './auth/LogoutButton';
 
 const useStyles = makeStyles((theme) => ({
     root: {
