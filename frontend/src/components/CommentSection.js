@@ -17,6 +17,7 @@ const CommentSection = () => {
             return a < b;
         });
         data.forEach((comment) => {
+            console.log(comment);
             comment.child = [];
         });
         let map = new Map();

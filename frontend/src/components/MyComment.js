@@ -11,13 +11,15 @@ const MyComment = ({data, mapForTcom, level}) => {
     return (
         <div>
             <Paper elevation={3}>
-            <h4>{spacing}{data.content}</h4>
-            {mapForTcom.has(data.id) && mapForTcom.get(data.id).map((comment) => {
-                return (
-                    <MyComment key={comment.id} data={comment} mapForTcom={mapForTcom} level={level + 1}/>
-                );
-            })}
-                </Paper>
+                <h4>{spacing}{data.content}</h4>
+                {mapForTcom.has(data.id) && mapForTcom.get(data.id).map((comment) => {
+                    if (level == 0) {
+                        return (
+                            <MyComment key={comment.id} data={comment} mapForTcom={mapForTcom} level={level + 1}/>
+                        );
+                    }
+                })}
+            </Paper>
         </div>
     );
 
