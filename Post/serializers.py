@@ -23,11 +23,6 @@ class PostDetailSerializer(serializers.ModelSerializer):
         print(instance)
         user=self.context['userWhoAsked']
         x['isLiked'] = instance.likers.filter(pk=user.pk).exists()
-        # # if instance.likers.filter(user=user).exists():
-        # if :
-        #
-        # else:
-        #     x['isLiked'] = False
         return x
 
 
