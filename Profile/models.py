@@ -9,3 +9,4 @@ class Profile(models.Model):
         primary_key=True,
     )
     bio=models.CharField(max_length=80)
+

@@ -1,6 +1,7 @@
 import json
 from json import loads, load
-
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.response import Response
 
@@ -8,11 +9,10 @@ from Post.models import Post, Comment
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from rest_framework import generics, status
 
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 
 from Post.serializers import PostDetailSerializer
 
-official_tag = ['official', 'avishkar', 'freshers']
 
 
 # class PostListView(ListCreateAPIView):
@@ -22,19 +22,23 @@ official_tag = ['official', 'avishkar', 'freshers']
 # def get_queryset(self):
 # last_two_days = now() - timedelta(days=2)
 # return Question.objects.filter(pub_date__gt=last_two_days)
+#
+# def likeIt(request):
+#     if(request.method==request.POST):
+#         PO
 
 class PostDetailView(ListCreateAPIView):
     serializer_class = PostDetailSerializer
 
-    def get(self, request, format="None"):
-        # requestData = loads(request.body)
-        # id=requestData['id']
-        id = 999
-        post_query = Post.objects.filter(id=id)
-        if (len(post_query) == 0):
-            return JsonResponse({'ERROR': 'The Post does not exist'}, status=status.HTTP_404_NOT_FOUND)
-        post = post_query[0]
-        return Response(self.serializer_class(post).data, status=status.HTTP_200_OK)
+    # def get(self, request, format="None"):
+    #     # requestData = loads(request.body)
+    #     # id=requestData['id']
+    #     id = 999
+    #     post_query = Post.objects.filter(id=id)
+    #     if (len(post_query) == 0):
+    #         return JsonResponse({'ERROR': 'The Post does not exist'}, status=status.HTTP_404_NOT_FOUND)
+    #     post = post_query[0]
+    #     return Response(self.serializer_class(post).data, status=status.HTTP_200_OK)
 
     def get(self, request, format="None"):
         # requestData = loads(request.body)
@@ -54,19 +58,58 @@ class PostListView(generics.ListCreateAPIView):
     def list(self, request):
         # Note the use of `get_queryset()` instead of `self.queryset`
         queryset = self.get_queryset()
-        serializer = PostDetailSerializer(queryset, many=True)
+        print("request.user",request.user)
+        serializer = PostDetailSerializer(queryset, many=True,context={'userWhoAsked': request.user})
+        # PostDetailSerializer()
         # return JsonResponse(serializer.data)
+        # serializer.is_valid()
         return Response(serializer.data)
-       #  if(request.user.is_authenticated):
-       #      queryset = self.get_queryset()
-       #      serializer = PostDetailSerializer(queryset, many=True)
-       #      return J(serializer.data,status=)
-       # else:
-       #  return Response()
 
+    #  if(request.user.is_authenticated):
+    #      queryset = self.get_queryset()
+    #      serializer = PostDetailSerializer(queryset, many=True)
+    #      return J(serializer.data,status=)
+    # else:
+    #  return Response()
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
+def like(request):
+    print(request.data)
+    # data=json.loads(request.body)
+    data=request.data
+    post_id = int(data['post_id'])
+    print("post id recieved ",post_id)
+    query=Post.objects.all().filter(pk=post_id)
+    if(len(query)>0):
+        post =query.first()
+        post.likers.add(request.user)
+        return JsonResponse({'success': True},status=status.HTTP_200_OK)
+    return JsonResponse({'success': False,'error':'PostId does not exist'},status=status.HTTP_400_BAD_REQUEST)
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
+def dislike(request):
+    print(request.data)
+    # data=json.loads(request.body)
+    data=request.data
+    post_id = int(data['post_id'])
+    print("post id recieved ",post_id)
+    query=Post.objects.all().filter(pk=post_id)
+    if(len(query)>0):
+        post =query.first()
+        post.likers.remove(request.user)
+        # post.likers.add(request.user)
+        return JsonResponse({'success': True},status=status.HTTP_200_OK)
+    return JsonResponse({'success': False,'error':'PostId does not exist'},status=status.HTTP_400_BAD_REQUEST)
+@api_view(['POST'])
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
 def commentSection(request):
-    data = json.loads(request.body)
-    post_id=data['post_id']
+    # data = json.loads(request.body)
+    data = request.data
+    post_id = data['post_id']
+
     Comment.objects.all().filter(post=post_id)
 
 # @api_view(['GET', ])

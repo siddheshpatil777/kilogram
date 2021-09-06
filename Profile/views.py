@@ -26,6 +26,7 @@ def validateEmail( email ):
     except ValidationError:
         return False
 
+@api_view(['GET'])
 def checkEmailExistence(request):
     email = request.GET['email']
     query_set = User.objects.all().filter(email=email)
@@ -86,7 +87,8 @@ def register(request):
             JsonResponse({'success': False, 'message': "email address notValid"}, status=status.HTTP_200_OK)
         else:
             print("good email")
-        user = User(username=username, email=email, password=password)
+        user = User(username=username,email=email)
+        user.set_password(password) #All ways use set password to make sure password salting and hashing is performed
         profile = Profile(user=user)
         user.save()
         profile.save()
@@ -121,8 +123,9 @@ def loginFunc(request):
     # password = request.data.get('password')
     username = data['username']
     password = data['password']
-    user = authenticate(request, username=username, password=password)
     print(username, password)
+    user = authenticate(request, username=username, password=password)
+    print(user)
     if user is not None:
         login(request, user)
         print('Access Granted')

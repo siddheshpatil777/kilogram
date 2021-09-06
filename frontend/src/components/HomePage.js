@@ -48,15 +48,11 @@ const HomePage = () => {
                     {/*<Grid item xs={12} sm={6}>*/}
                     {/*</Grid>*/}
                     {/*{ !isPending && console.log(data)}*/}
-
-
-
-
                 {/*</Grid>*/}
                   {data && data.map(function (postCard) {
                         // console.log(postCard);
                         return (
-                            <Grid item xs={12} sm={12} key={postCard.id}>
+                            <Grid item xs={3} sm={3} key={postCard.id}>
                                 <PostCard data={postCard}/>
                             </Grid>
                         )
