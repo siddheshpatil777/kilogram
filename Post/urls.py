@@ -4,9 +4,9 @@ from . import views
 # from .views import PostListView, PostDetailView, PostUpdateView, PostDeleteView, Search
 # , CommentCreateView
 # from .views import commentFunc
-from .views import PostListView,PostDetailView
+from .views import PostListView
 urlpatterns = [
-    path('', PostDetailView.as_view()),
+    # path('', PostDetailView.as_view()),
     # path('', PostListView),
     # path('', PostListView, name='blog-home'),
     # path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),

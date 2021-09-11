@@ -62,7 +62,6 @@ export default function Register() {
 
     const alreadyUsedUserNames = useRef(new Map());
     const alreadyUsedEmails = useRef(new Map());
-
     const classes = useStyles();
     const history = useHistory();
     const [open, setOpen] = useState(false);
@@ -79,19 +78,8 @@ export default function Register() {
         usernameValidity: false,
         emailValidity: false,
     });
-    // const [usernameValidity, setUsernameValidity] = useState(false);
-    // const [prevValidUsername, setPrevValidUsername] = useState("");
-    // const [emailValidity, setEmailValidity] = useState(false);
-    // const [userNameRequestCalled, setUserNameRequestCalled] = useState(false);
-    // const [emailRequestCalled, setEmailRequestCalled] = useState(false);
     const sendRegisterRequest = () => {
-        const registerData = {
-            'username': values.username,
-            'fullname': values.fullname,
-            'email': values.email,
-            'gender': values.gender,
-            'password': values.password,
-        }
+        const registerData = values;
         const requestOptions = {
             method: 'POST',
             headers: {

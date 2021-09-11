@@ -17,6 +17,10 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import postCardImage from './temp.png';
 import CommentSection from './CommentSection';
+import BASE_URL from "./METADATA"
+import useFetch from "./utility/useFetch";
+import CSRFToken from "./utility/csrftoken";
+
 const useStyles = makeStyles((theme) => ({
     root: {
         maxWidth: 1345,
@@ -38,19 +42,58 @@ const useStyles = makeStyles((theme) => ({
     avatar: {
         backgroundColor: red[500],
     },
+    likedButtonColor: {
+        backgroundColor: red[500],
+    },
 }));
 
 export default function PostCard({data}) {
     // {title,content,date_posted,author}
-    const {author,content,date_posted,id,likers,title,views}=data;
+    const {author, content, date_posted, id, isLiked, title, views} = data;
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
+    const likeThisPost = () => {
+        const options = {
+            method: 'POST',
+            headers: {
+                "Content-Type": 'application/json',
+                'X-CSRFToken': CSRFToken(),
+            },
+            body: {
+                "post_id": id,
+            },
+        };
+        fetch(BASE_URL + "/api/like", options);
+    };
+    const dislikeThisPost = () => {
+        const options = {
+            method: 'POST',
+            headers: {
+                "Content-Type": 'application/json',
+                'X-CSRFToken': CSRFToken(),
+            },
+            body: JSON.stringify({
+                "post_id": id,
+            }),
+        };
+        fetch(BASE_URL + "/api/dislike", options);
+        // const {data, isPending, error}=useFetch
+    };
+    const handleLikeButtonPressed = (e) => {
+        e.preventDefault();
+        if (isLiked === true) {
+            dislikeThisPost();
+        } else {
+            likeThisPost();
+        }
+    };
     // console.log(data);
     // return(<h1>hello</h1>);
-    console.log(author,content,date_posted,id,likers,title,views);
+    const likedButtonColor = (isLiked) ? "#ba2c73" : "#";
+    // console.log(author, content, date_posted, id, isLiked, title, views);
     return (
         <Card className={classes.root}>
             <CardHeader
@@ -78,8 +121,8 @@ export default function PostCard({data}) {
                 </Typography>
             </CardContent>
             <CardActions disableSpacing>
-                <IconButton aria-label="add to favorites" color="#">
-                    <FavoriteIcon/>
+                <IconButton aria-label="add to favorites" onClick={handleLikeButtonPressed}>
+                    <FavoriteIcon color={(isLiked ? "secondary" : "")}/>
                 </IconButton>
                 <IconButton aria-label="share">
                     <ShareIcon/>

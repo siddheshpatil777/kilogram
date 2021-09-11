@@ -17,7 +17,7 @@ const CommentSection = () => {
             return a < b;
         });
         data.forEach((comment) => {
-            console.log(comment);
+            // console.log(comment);
             comment.child = [];
         });
         let map = new Map();
@@ -34,8 +34,8 @@ const CommentSection = () => {
                 map.set(comment.parent, [comment]);
             }
         });
-        console.log(data);
-        console.log(map);
+        // console.log(data);
+        // console.log(map);
         const mainComments = map.get(0);
         return (
             mainComments.map((comment) => {

@@ -42,6 +42,8 @@ export default function NavBar() {
     // }
 
     const {username} = useContext(UserDataContext);
+    // updateUserName();
+
     let loginLogoutButton;
     if (username === null) {
         loginLogoutButton = <Link to="/login"><Button color="inherit">Login</Button></Link>;

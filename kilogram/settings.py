@@ -25,7 +25,9 @@ SECRET_KEY = 'hirtzp(qgxbbhc2w7!c-_!drk7advsgfd&_h40r74d7sxvqjs@'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+# CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS =True
 
 # Application definition
 
@@ -59,10 +61,10 @@ MIDDLEWARE = [
 
 ]
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-    ]
+    # 'DEFAULT_AUTHENTICATION_CLASSES': [
+    #     'rest_framework.authentication.BasicAuthentication',
+    #     'rest_framework.authentication.SessionAuthentication',
+    # ]
 }
 # 'django.middleware.csrf.CsrfViewMiddleware',
 
@@ -134,3 +136,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+

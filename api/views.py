@@ -12,26 +12,30 @@ from Post.models import Comment, Post
 from Post.serializers import CommentSerializer
 from .serializers import GetMyInfoSerializer
 
-
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
 # Create your views here.
 def main(request):
     return HttpResponse("Hello")
 
+# @api_view(['GET'])
+def getMyInfo(request):
+    # return Response({'username': 'sid'}, status=status.HTTP_200_OK);
+    print("got getMyInfo from ",request.user)
+    if request.user.is_authenticated:
+        response = JsonResponse(GetMyInfoSerializer(request.user).data, status=status.HTTP_200_OK)
+        # response['Access-Control-Allow-Origin'] = '*'
+        return response
+    return JsonResponse({'username': None}, status=status.HTTP_200_OK)
 
-class GetMyInfo(APIView):
-    def get(self, request, format=None):
-        # return Response({'username': 'sid'}, status=status.HTTP_200_OK);
-        if request.user.is_authenticated:
-            response = Response(GetMyInfoSerializer(request.user).data, status=status.HTTP_200_OK)
-            response['Access-Control-Allow-Origin'] = '*'
-            return response
-        return Response({'username': 'null'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CommentListView(ListCreateAPIView):
     serializer_class = CommentSerializer
     queryset=Comment.objects.all()
     def list(self, request):
+
         # Note the use of `get_queryset()` instead of `self.queryset`
         # data = json.loads(request.body)
         # post = data['post']

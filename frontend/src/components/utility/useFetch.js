@@ -5,8 +5,6 @@ const useFetch = (url, method,sendData={}) => {
     const [data, setData] = useState(null);
     const [error, setError] = useState(null);
     const [isPending, setIsPending] = useState(true);
-
-
     useEffect(() => {
         const abortCont = new AbortController();
         // setTimeout(() => {
@@ -25,6 +23,7 @@ const useFetch = (url, method,sendData={}) => {
                         "Content-Type": 'application/json',
                         'X-CSRFToken': CSRFToken(),
                     },
+                    credentials: 'include',
                     body:sendData,
 
                 };
@@ -37,6 +36,7 @@ const useFetch = (url, method,sendData={}) => {
                     return res.json();
                 })
                 .then(data => {
+                    // console.log("FCCC",data);
                     setError(null);
                     setData(data);
                     setIsPending(false);

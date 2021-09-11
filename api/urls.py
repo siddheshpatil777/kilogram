@@ -1,11 +1,11 @@
 from django.urls import path
 # from .views import RoomView,CreateRoomView,GetRoom,JoinRoom,UserInRoom,LeaveRoom,UpdateRoom
 from Profile.views import checkUsernameExistence, checkEmailExistence
-from .views import GetMyInfo,CommentListView
+from .views import CommentListView,getMyInfo
 from Post.views import PostListView,like,dislike
 
 urlpatterns = [
-    path('currentInfo', GetMyInfo.as_view()),
+    path('currentInfo', getMyInfo),
     path('posts', PostListView.as_view()),
     path('commentSection', CommentListView.as_view()),
     path('checkEmailExistence', checkEmailExistence),

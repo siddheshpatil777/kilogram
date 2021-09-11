@@ -1,26 +1,22 @@
 import React, {Component} from 'react';
+import BASE_URL from "../METADATA";
+import CSRFToken from "../utility/csrftoken";
 
 
 const fetchUserName = () => {
-    return fetch("http://127.0.0.1:8000"+"/api/currentInfo", {
+    return fetch(BASE_URL+"/api/currentInfo", {
         method: "GET",
         headers: {
-            "Accept": "application/json"
+            "Accept": "application/json",
+             'X-CSRFToken': CSRFToken(),
         },
+         credentials: 'include'
     }).then((response) => {
 
         if (response.ok) {
             return response.json();
         }
         return {username: null,};
-    }).then((data) => {
-        // console.log(data);
-        // if (data) {
-        //     this.setState({
-        //         username: data.username,
-        //     });
-        // }
-        return data.username;
     });
 }
 export default fetchUserName;

@@ -7,7 +7,7 @@ import {Grid} from "@material-ui/core";
 import Paper from '@material-ui/core/Paper';
 import BASE_URL from './METADATA';
 import {makeStyles} from '@material-ui/core/styles';
-
+import {isEmpty} from './utility/utility';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -24,12 +24,11 @@ const HomePage = () => {
     // const [data, isPending, isError] = useFetch('/api/currentInfo');
     // this.context.setState({username: data.username});
     const {data, isPending, error} = useFetch(BASE_URL + '/api/posts');
-    console.log(data);
-    console.log(isPending);
+    // const allPosts =
+        // console.log(data);
+    // console.log(isPending);
     return (
-
         <div>
-
             <Grid
                 container
                 spacing={1}
@@ -39,24 +38,15 @@ const HomePage = () => {
                     container
                     xs={3}
                 />
-                {/*<Grid*/}
-                {/*    container*/}
-                {/*    xs={12}*/}
-                {/*    spacing={3}*/}
-                {/*    justify="space-evenly"*/}
-                {/*>*/}
-                    {/*<Grid item xs={12} sm={6}>*/}
-                    {/*</Grid>*/}
-                    {/*{ !isPending && console.log(data)}*/}
-                {/*</Grid>*/}
-                  {data && data.map(function (postCard) {
-                        // console.log(postCard);
-                        return (
-                            <Grid item xs={3} sm={3} key={postCard.id}>
-                                <PostCard data={postCard}/>
-                            </Grid>
-                        )
-                    })}
+                {data && data.map(function (postCard) {
+                    // console.log("post card data =");
+                    // console.log(postCard);
+                    return (
+                        <Grid item xs={3} sm={3} key={postCard.id}>
+                            <PostCard data={postCard}/>
+                        </Grid>
+                    )
+                })}
             </Grid>
         </div>
 

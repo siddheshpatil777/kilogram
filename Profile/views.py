@@ -112,7 +112,6 @@ def logoutFunc(request):
 
 @api_view(['POST', ])
 def loginFunc(request):
-
     if request.user.is_authenticated:
         return JsonResponse({'success': False,'message': 'Bad request Access already granted'}, status=status.HTTP_200_OK)
     data = json.loads(request.body)

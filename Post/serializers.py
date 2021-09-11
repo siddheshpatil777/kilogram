@@ -21,8 +21,10 @@ class PostDetailSerializer(serializers.ModelSerializer):
         x=super().to_representation(instance)
         print(self.context)
         print(instance)
-        user=self.context['userWhoAsked']
-        x['isLiked'] = instance.likers.filter(pk=user.pk).exists()
+        user=False
+            # self.context['userWhoAsked']
+        # x['isLiked'] = instance.likers.filter(pk=user.pk).exists()
+        x['views']=len(x['views'])
         return x
 
 

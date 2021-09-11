@@ -27,30 +27,6 @@ from Post.serializers import PostDetailSerializer
 #     if(request.method==request.POST):
 #         PO
 
-class PostDetailView(ListCreateAPIView):
-    serializer_class = PostDetailSerializer
-
-    # def get(self, request, format="None"):
-    #     # requestData = loads(request.body)
-    #     # id=requestData['id']
-    #     id = 999
-    #     post_query = Post.objects.filter(id=id)
-    #     if (len(post_query) == 0):
-    #         return JsonResponse({'ERROR': 'The Post does not exist'}, status=status.HTTP_404_NOT_FOUND)
-    #     post = post_query[0]
-    #     return Response(self.serializer_class(post).data, status=status.HTTP_200_OK)
-
-    def get(self, request, format="None"):
-        # requestData = loads(request.body)
-        # id=requestData['id']
-        id = 1
-        post_query = Post.objects.filter(id=id)
-        if (len(post_query) == 0):
-            return JsonResponse({'ERROR': 'The Post does not exist'}, status=status.HTTP_404_NOT_FOUND)
-        post = post_query[0]
-        return JsonResponse(self.serializer_class(post).data, status=status.HTTP_200_OK)
-
-
 class PostListView(generics.ListCreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
@@ -90,9 +66,9 @@ def like(request):
 @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([IsAuthenticated])
 def dislike(request):
-    print(request.data)
-    # data=json.loads(request.body)
-    data=request.data
+    # print(request.data)
+    data=json.loads(request.body)
+    # data=request.data
     post_id = int(data['post_id'])
     print("post id recieved ",post_id)
     query=Post.objects.all().filter(pk=post_id)
