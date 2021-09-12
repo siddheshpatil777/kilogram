@@ -12,6 +12,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import Typography from "@material-ui/core/Typography";
 import Navbar from "./Navbar";
 import Register from "./auth/Register";
+import SignIn from './auth/SignIn';
 // const UserDataContext=React.createContext({username:null});
 export default class App extends Component {
     constructor(props) {
@@ -28,7 +29,8 @@ export default class App extends Component {
                             <HomePage/>
                         </Route>
                         <Route exact path="/login">
-                            <LoginPage props={{...this.props}}/>
+                            {/*<LoginPage props={{...this.props}}/>*/}
+                            <SignIn props={{...this.props}}/>
                         </Route>
                         <Route exact path="/register">
                             <Register />

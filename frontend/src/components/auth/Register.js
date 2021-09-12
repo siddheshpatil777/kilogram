@@ -22,15 +22,38 @@ import MuiAlert from '@material-ui/lab/Alert';
 import myFetch from "../utility/myFetch";
 import delay from "../utility/utility";
 import useStateWithPromise from "../utility/useStateWithPromise";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Avatar from "@material-ui/core/Avatar";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Typography from "@material-ui/core/Typography";
+import Checkbox from "@material-ui/core/Checkbox";
+import Link from "@material-ui/core/Link";
+import Box from "@material-ui/core/Box";
+import Container from "@material-ui/core/Container";
 
 const useStyles = makeStyles((theme) => ({
-    // root: {
-    //     display: 'flex',
-    //     flexWrap: 'wrap',
-    // },
+    paper: {
+        marginTop: theme.spacing(8),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+    avatar: {
+        margin: theme.spacing(1),
+        backgroundColor: theme.palette.secondary.main,
+    },
+    form: {
+        width: '100%', // Fix IE 11 issue.
+        marginTop: theme.spacing(1),
+    },
+    submit: {
+        margin: theme.spacing(3, 0, 2),
+    },
+    allTextBlack: {
+        color: "black",
+    },
     margin: {
         margin: theme.spacing(1),
-        color: 'red'
     },
     withoutLabel: {
         marginTop: theme.spacing(3),
@@ -39,6 +62,7 @@ const useStyles = makeStyles((theme) => ({
         width: '25ch',
     },
 }));
+
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -72,10 +96,9 @@ export default function Register() {
         email: '',
         gender: 'female',
         password: '',
-        showPassword: false,
-        usernameValidity: false,
-        emailValidity: false,
     });
+    const [showPassword, setShowPassword] = useState(false);
+
     //   const [values, setValues] = useState({
     //     username: '',
     //     fullname: '',
@@ -92,9 +115,10 @@ export default function Register() {
         usernameValidity: false,
         emailValidity: false,
     });
-    const [usernameValidity,setUsernameValidity]= useState(false);
-     const [emailValidity,setEmailValidity]= useState(false);
-    const sendRegisterRequest = () => {
+    const [usernameValidity, setUsernameValidity] = useState(false);
+    const [emailValidity, setEmailValidity] = useState(false);
+    const sendRegisterRequest = (e) => {
+        e.preventDefault();
         const registerData = values;
         const requestOptions = {
             method: 'POST',
@@ -143,7 +167,7 @@ export default function Register() {
                 alreadyUsedUserNames.current.set(value, data.value);
                 setFieldValidity({...fieldValidity, usernameValidity: data.value});
                 // setValues({...values, usernameValidity: data.value});
-                setUsernameValidity( data.value);
+                setUsernameValidity(data.value);
 
             }).catch(err => {
                 console.log(err);
@@ -158,7 +182,7 @@ export default function Register() {
                 console.log("email validity " + data.value);
                 alreadyUsedEmails.current.set(value, data.value);
                 // setFieldValidity({...fieldValidity, emailValidity: data.value});
-                 setEmailValidity(alreadyUsedEmails.current.get(data.value));
+                setEmailValidity(alreadyUsedEmails.current.get(data.value));
                 // setValues({...values, emailValidity: data.value});
                 return data.value;
             }).catch(err => {
@@ -167,102 +191,43 @@ export default function Register() {
         }
     }
     const handleChange = (prop) => async (event) => {
-          setValues({...values, [prop]: event.target.value}).then(data =>{
-                console.log(data.username);
-                console.log("handled change");
-                console.log(data);
-                console.log(alreadyUsedUserNames);
-                let username = data.username;
-                if (alreadyUsedUserNames.current.has(username) === true) {
-                    // setValues({...values, usernameValidity: alreadyUsedUserNames.current.get(username)});
+        setValues({...values, [prop]: event.target.value}).then(data => {
+            console.log(data.username);
+            console.log("handled change");
+            console.log(data);
+            console.log(alreadyUsedUserNames);
+            let username = data.username;
+            if (alreadyUsedUserNames.current.has(username) === true) {
+                // setValues({...values, usernameValidity: alreadyUsedUserNames.current.get(username)});
+                // setFieldValidity({
+                //     ...fieldValidity,
+                //     usernameValidity: alreadyUsedUserNames.current.get(username)
+                // });
+                setUsernameValidity(alreadyUsedUserNames.current.get(username));
+            } else {
+                requestServerForValidity('username', username);
+            }
+
+            let email = data.email;
+            if (alreadyUsedEmails.current.has(email) === true) {
+                if (alreadyUsedEmails.current.has(email) !== email) {
+                    // setValues({...values, emailValidity: alreadyUsedEmails.current.get(email)});
+                    //
                     // setFieldValidity({
                     //     ...fieldValidity,
-                    //     usernameValidity: alreadyUsedUserNames.current.get(username)
+                    //     emailValidity: alreadyUsedEmails.current.get(email)
                     // });
-                    setUsernameValidity( alreadyUsedUserNames.current.get(username));
-                } else {
-                    requestServerForValidity('username', username);
+                    setEmailValidity(alreadyUsedEmails.current.get(email));
                 }
-
-                let email = data.email;
-                if (alreadyUsedEmails.current.has(email) === true) {
-                    if (alreadyUsedEmails.current.has(email) !== email) {
-                        // setValues({...values, emailValidity: alreadyUsedEmails.current.get(email)});
-                        //
-                        // setFieldValidity({
-                        //     ...fieldValidity,
-                        //     emailValidity: alreadyUsedEmails.current.get(email)
-                        // });
-                        setEmailValidity(alreadyUsedEmails.current.get(email));
-                    }
-                } else {
-                    requestServerForValidity('email', email);
-                }
-          });
-        // if (prop === 'email' || prop === 'username') {
-        //
-        //
-        //
-        //
-        // }else{
-        //       setValues({...values, [prop]: event.target.value});
-        // }
+            } else {
+                requestServerForValidity('email', email);
+            }
+        });
 
     };
 
-    // useEffect(() => {
-    //     const interval = setInterval(async () => {
-    //         let username = values.username;
-    //         console.log("fieldValidity.usernameValidity = " + fieldValidity.usernameValidity);
-    //         if (alreadyUsedUserNames.current.has(username) === true && alreadyUsedUserNames.current.get(username) !== fieldValidity.usernameValidity) {
-    //
-    //                 setFieldValidity({
-    //                     ...fieldValidity,
-    //                     usernameValidity: alreadyUsedUserNames.current.get(values.username)
-    //                 });
-    //
-    //         } else {
-    //             await requestServerForValidity('username', values.username);
-    //             // await usernameValidity.then((res) => {
-    //             //     console.log("res ="+res);
-    //             // });
-    //             // console.log("requestServerForValidity "+usernameValidity);
-    //             // = alreadyUsedUserNames.current.get(values.username);
-    //             // setFieldValidity({...fieldValidity, usernameValidity: usernameValidity});
-    //         }
-    //
-    //
-    //         if (alreadyUsedEmails.current.has(values.email) === true && alreadyUsedEmails.current.has(values.email) !== fieldValidity.emailValidity) {
-    //                 setFieldValidity({...fieldValidity, emailValidity: alreadyUsedEmails.current.get(values.email)});
-    //         } else {
-    //             await requestServerForValidity('email', values.email);
-    //
-    //         }
-    //         console.log("values.username = " + values.username);
-    //         //   console.log("alreadyUsedEmails.has(values.username) = "+alreadyUsedUserNames.current.has(values.username) );
-    //         //   console.log("alreadyUsedUserNames.get(values.username) = "+alreadyUsedUserNames.current.get(values.username) );
-    //         // console.log("fieldValidity.usernameValidity = "+fieldValidity.usernameValidity);
-    //         //
-    //         console.log("values.email = " + values.email);
-    //         //  console.log("alreadyUsedEmails.has(values.email) = "+alreadyUsedEmails.current.has(values.email) );
-    //         //    console.log("alreadyUsedEmails.get(values.email) = "+alreadyUsedEmails.currentget(values.email) );
-    //         // console.log("fieldValidity.emailValidit = "+fieldValidity.emailValidity);
-    //         //  console.log(" ");
-    //         console.log(alreadyUsedUserNames.current);
-    //         console.log(alreadyUsedEmails.current);
-    //
-    //
-    //     }, 3000);
-    //     return () => clearInterval(interval);
-    //
-    //     // if (fieldValidity.usernameValidity === false && ) {
-    //     //     requestServerForValidity('username');
-    //     // }
-    // }, [values.username, values.email]);
-
-
     const handleClickShowPassword = () => {
-        setValues({...values, showPassword: !values.showPassword});
+        setShowPassword(!showPassword);
     };
 
     const handleMouseDownPassword = (event) => {
@@ -270,88 +235,99 @@ export default function Register() {
     };
 
     return (
-        <div className={classes.root}>
-            <div>
-                <Grid
-                    container
-                    spacing={1}
-                    direction="column"
-                    justify="center"
-                    alignItems="center">
-                    <Grid item xs={12}>
-                        <TextField
-                            label="Username"
-                            id="standard-start-adornment"
-                            className={clsx(classes.margin, classes.textField)}
-                            value={values.username}
-                            onChange={handleChange('username')}
+        <Container component="main" maxWidth="xs">
+            <CssBaseline/>
+            <div className={classes.paper}>
+                <Avatar className={classes.avatar}>
+                    <LockOutlinedIcon/>
+                </Avatar>
+                <Typography component="h1" variant="h5">
+                    Register
+                </Typography>
+                <form className={classes.form} noValidate onSubmit={sendRegisterRequest}>
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="username"
+                        label="UserName"
+                        name="username"
+                        autoComplete="username"
+                        autoFocus
+                        onChange={handleChange('username')}
+                    />
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="fullname"
+                        label="Full Name"
+                        name="fullname"
+                        autoComplete="fullname"
+                        autoFocus
+                        onChange={handleChange('fullname')}
+                    />
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        required
+                        fullWidth
+                        name="email"
+                        label="Email"
+                        type="email"
+                        id="email"
+                        autoComplete="current-email"
+                        onChange={handleChange('email')}
+                    />
+
+                    <FormControl margin="normal" fullWidth variant="outlined">
+                        <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                        <OutlinedInput
+                            fullWidth
+                            margin="normal"
+                            id="outlined-adornment-password"
+                            type={showPassword ? 'text' : 'password'}
+                            value={values.password}
+                            onChange={handleChange('password')}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={handleClickShowPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                        edge="end"
+                                    >
+                                        {showPassword ? <Visibility/> : <VisibilityOff/>}
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                            labelWidth={70}
                         />
-                        {(usernameValidity === true) ? <h1>valid</h1> : <h1>not valid</h1>}
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            label="FullName"
+                    </FormControl>
+                    <FormControl className={clsx(classes.margin, classes.textField)} component="fieldset">
+                        <FormLabel component="legend">Gender</FormLabel>
+                        <RadioGroup aria-label="gender" name="gender1" value={values.gender}
+                                    onChange={handleChange('gender')}>
 
-                            id="standard-start-adornment"
-                            className={clsx(classes.margin, classes.textField)}
-                            value={values.fullname}
-                            onChange={handleChange('fullname')}
-                        />
+                            <FormControlLabel value="female" control={<Radio/>} label="Female"/>
+                            <FormControlLabel value="male" control={<Radio/>} label="Male"/>
+                            <FormControlLabel value="other" control={<Radio/>} label="Other"/>
+                        </RadioGroup>
+                    </FormControl>
 
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            label="email "
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        className={classes.submit}
+                    >
+                        Register
+                    </Button>
 
-                            id="standard-start-adornment"
-                            className={clsx(classes.margin, classes.textField)}
-                            value={values.email}
-                            onChange={handleChange('email')}
-                        />
-                        {(emailValidity === true) ? <h1>valid</h1> : <h1>not valid</h1>}
-
-                    </Grid>
-                    <Grid item xs={12}>
-                        <FormControl component="fieldset">
-                            <FormLabel component="legend">Gender</FormLabel>
-                            <RadioGroup aria-label="gender" name="gender1" value={values.gender}
-                                        onChange={handleChange('gender')}>
-
-                                <FormControlLabel value="female" control={<Radio/>} label="Female"/>
-                                <FormControlLabel value="male" control={<Radio/>} label="Male"/>
-                                <FormControlLabel value="other" control={<Radio/>} label="Other"/>
-                            </RadioGroup>
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <FormControl className={clsx(classes.margin, classes.textField)}>
-                            <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
-                            <Input
-                                id="standard-adornment-password"
-                                type={values.showPassword ? 'text' : 'password'}
-                                value={values.password}
-                                onChange={handleChange('password')}
-                                endAdornment={
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            aria-label="toggle password visibility"
-                                            onClick={handleClickShowPassword}
-                                            onMouseDown={handleMouseDownPassword}
-                                        >
-                                            {values.showPassword ? <Visibility/> : <VisibilityOff/>}
-                                        </IconButton>
-                                    </InputAdornment>
-                                }
-                            />
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Button onClick={sendRegisterRequest}>register</Button>
-                    </Grid>
-
-                </Grid>
-
-
+                </form>
             </div>
 
             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
@@ -359,8 +335,7 @@ export default function Register() {
                     {snackBar.message}
                 </Alert>
             </Snackbar>
+        </Container>
 
-
-        </div>
     );
 }

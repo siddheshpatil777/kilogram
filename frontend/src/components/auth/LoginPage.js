@@ -9,20 +9,25 @@ import delay from "../utility/utility";
 import {Alert} from "@material-ui/lab";
 
 const LoginPage = (props) => {
-
-
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
         }
-
         setOpen(false);
     };
      const [open, setOpen] = useState(false);
-    const [username, setUsername] = useState("");
+    const [formUsername, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const history = useHistory();
-    const {setUserName, updateUserName} = useContext(UserDataContext);
+
+    const {setUserName, username} = useContext(UserDataContext);
+    // const context=useContext(UserDataContext);
+    // console.log("context");
+    // console.log(context);
+    // if(username!=null){
+    //
+    // }
+     history.push('/');
     const onLoginButtonPressed = async (e) => {
         e.preventDefault();
         const requestOptions = {
@@ -32,7 +37,7 @@ const LoginPage = (props) => {
                 'X-CSRFToken': CSRFToken(),
             },
             body: JSON.stringify({
-                'username': username,
+                'username': formUsername,
                 'password': password
             }),
         }
@@ -43,7 +48,7 @@ const LoginPage = (props) => {
                     console.log("error");
                     setUserName(null);
                 } else {
-                    setUserName(username);
+                    setUserName(formUsername);
                 }
                 return response.json();
             }).then((data) => {
@@ -61,13 +66,14 @@ const LoginPage = (props) => {
     const onUsernameChange = (e) => {
         // e.preventDefault();
         setUsername(e.target.value);
-        console.log("now user name is"+username);
+        console.log("now user name is"+formUsername);
     }
     const onPasswordChange = (e) => {
         // e.preventDefault();
         setPassword(e.target.value);
     }
     const [snackBar, setSnackBar] = useState({severity: "None", message: "None"});
+
     return (
         <div id="#loginPage">
             <form>
@@ -109,7 +115,7 @@ const LoginPage = (props) => {
 
                     </Grid>
                     <Grid item xs={12} align="center">
-                        <Button variant="contained" color="primary" onClick={onLoginButtonPressed}>Login</Button>
+                        <Button variant="contained" color="primary"  onClick={onLoginButtonPressed}>Login</Button>
                     </Grid>
 
 
