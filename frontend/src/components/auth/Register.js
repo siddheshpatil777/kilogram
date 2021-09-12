@@ -66,18 +66,34 @@ export default function Register() {
     const history = useHistory();
     const [open, setOpen] = useState(false);
     const [snackBar, setSnackBar] = useState({severity: "None", message: "None"});
-    const [values, setValues] = useState({
+    const [values, setValues] = useStateWithPromise({
         username: '',
         fullname: '',
         email: '',
         gender: 'female',
         password: '',
         showPassword: false,
+        usernameValidity: false,
+        emailValidity: false,
     });
+    //   const [values, setValues] = useState({
+    //     username: '',
+    //     fullname: '',
+    //     email: '',
+    //     gender: 'female',
+    //     password: '',
+    //     showPassword: false,
+    //     usernameValidity: false,
+    //     emailValidity: false,
+    // },(data)=>{
+    //       console.log(data);
+    //   });
     const [fieldValidity, setFieldValidity] = useState({
         usernameValidity: false,
         emailValidity: false,
     });
+    const [usernameValidity,setUsernameValidity]= useState(false);
+     const [emailValidity,setEmailValidity]= useState(false);
     const sendRegisterRequest = () => {
         const registerData = values;
         const requestOptions = {
@@ -126,6 +142,9 @@ export default function Register() {
                 console.log("username validity " + data.value);
                 alreadyUsedUserNames.current.set(value, data.value);
                 setFieldValidity({...fieldValidity, usernameValidity: data.value});
+                // setValues({...values, usernameValidity: data.value});
+                setUsernameValidity( data.value);
+
             }).catch(err => {
                 console.log(err);
             });
@@ -138,7 +157,9 @@ export default function Register() {
                 // console.log(data);
                 console.log("email validity " + data.value);
                 alreadyUsedEmails.current.set(value, data.value);
-                setFieldValidity({...fieldValidity, emailValidity: data.value});
+                // setFieldValidity({...fieldValidity, emailValidity: data.value});
+                 setEmailValidity(alreadyUsedEmails.current.get(data.value));
+                // setValues({...values, emailValidity: data.value});
                 return data.value;
             }).catch(err => {
                 console.log(err);
@@ -146,60 +167,98 @@ export default function Register() {
         }
     }
     const handleChange = (prop) => async (event) => {
-        console.log("handled change")
-        setValues({...values, [prop]: event.target.value});
-    };
-    useEffect(() => {
-        const interval = setInterval(async () => {
-            let username = values.username;
-            console.log("fieldValidity.usernameValidity = " + fieldValidity.usernameValidity);
-            if (alreadyUsedUserNames.current.has(username) === true) {
-                if (alreadyUsedUserNames.current.get(username) !== fieldValidity.usernameValidity) {
-                    setFieldValidity({
-                        ...fieldValidity,
-                        usernameValidity: alreadyUsedUserNames.current.get(values.username)
-                    });
+          setValues({...values, [prop]: event.target.value}).then(data =>{
+                console.log(data.username);
+                console.log("handled change");
+                console.log(data);
+                console.log(alreadyUsedUserNames);
+                let username = data.username;
+                if (alreadyUsedUserNames.current.has(username) === true) {
+                    // setValues({...values, usernameValidity: alreadyUsedUserNames.current.get(username)});
+                    // setFieldValidity({
+                    //     ...fieldValidity,
+                    //     usernameValidity: alreadyUsedUserNames.current.get(username)
+                    // });
+                    setUsernameValidity( alreadyUsedUserNames.current.get(username));
+                } else {
+                    requestServerForValidity('username', username);
                 }
-            } else {
-                await requestServerForValidity('username', values.username);
-                // await usernameValidity.then((res) => {
-                //     console.log("res ="+res);
-                // });
-                // console.log("requestServerForValidity "+usernameValidity);
-                // = alreadyUsedUserNames.current.get(values.username);
-                // setFieldValidity({...fieldValidity, usernameValidity: usernameValidity});
-            }
 
-
-            if (alreadyUsedEmails.current.has(values.email) === true) {
-                if(alreadyUsedEmails.current.has(values.email) !== fieldValidity.emailValidity){
-                     setFieldValidity({...fieldValidity, emailValidity: alreadyUsedEmails.current.get(values.email)});
+                let email = data.email;
+                if (alreadyUsedEmails.current.has(email) === true) {
+                    if (alreadyUsedEmails.current.has(email) !== email) {
+                        // setValues({...values, emailValidity: alreadyUsedEmails.current.get(email)});
+                        //
+                        // setFieldValidity({
+                        //     ...fieldValidity,
+                        //     emailValidity: alreadyUsedEmails.current.get(email)
+                        // });
+                        setEmailValidity(alreadyUsedEmails.current.get(email));
+                    }
+                } else {
+                    requestServerForValidity('email', email);
                 }
-            } else {
-                 await requestServerForValidity('email', values.email);
-
-            }
-            console.log("values.username = " + values.username);
-            //   console.log("alreadyUsedEmails.has(values.username) = "+alreadyUsedUserNames.current.has(values.username) );
-            //   console.log("alreadyUsedUserNames.get(values.username) = "+alreadyUsedUserNames.current.get(values.username) );
-            // console.log("fieldValidity.usernameValidity = "+fieldValidity.usernameValidity);
-            //
-            console.log("values.email = " + values.email);
-            //  console.log("alreadyUsedEmails.has(values.email) = "+alreadyUsedEmails.current.has(values.email) );
-            //    console.log("alreadyUsedEmails.get(values.email) = "+alreadyUsedEmails.currentget(values.email) );
-            // console.log("fieldValidity.emailValidit = "+fieldValidity.emailValidity);
-            //  console.log(" ");
-            console.log(alreadyUsedUserNames.current);
-            console.log(alreadyUsedEmails.current);
-
-
-        }, 3000);
-        return () => clearInterval(interval);
-
-        // if (fieldValidity.usernameValidity === false && ) {
-        //     requestServerForValidity('username');
+          });
+        // if (prop === 'email' || prop === 'username') {
+        //
+        //
+        //
+        //
+        // }else{
+        //       setValues({...values, [prop]: event.target.value});
         // }
-    }, [values.username, values.email]);
+
+    };
+
+    // useEffect(() => {
+    //     const interval = setInterval(async () => {
+    //         let username = values.username;
+    //         console.log("fieldValidity.usernameValidity = " + fieldValidity.usernameValidity);
+    //         if (alreadyUsedUserNames.current.has(username) === true && alreadyUsedUserNames.current.get(username) !== fieldValidity.usernameValidity) {
+    //
+    //                 setFieldValidity({
+    //                     ...fieldValidity,
+    //                     usernameValidity: alreadyUsedUserNames.current.get(values.username)
+    //                 });
+    //
+    //         } else {
+    //             await requestServerForValidity('username', values.username);
+    //             // await usernameValidity.then((res) => {
+    //             //     console.log("res ="+res);
+    //             // });
+    //             // console.log("requestServerForValidity "+usernameValidity);
+    //             // = alreadyUsedUserNames.current.get(values.username);
+    //             // setFieldValidity({...fieldValidity, usernameValidity: usernameValidity});
+    //         }
+    //
+    //
+    //         if (alreadyUsedEmails.current.has(values.email) === true && alreadyUsedEmails.current.has(values.email) !== fieldValidity.emailValidity) {
+    //                 setFieldValidity({...fieldValidity, emailValidity: alreadyUsedEmails.current.get(values.email)});
+    //         } else {
+    //             await requestServerForValidity('email', values.email);
+    //
+    //         }
+    //         console.log("values.username = " + values.username);
+    //         //   console.log("alreadyUsedEmails.has(values.username) = "+alreadyUsedUserNames.current.has(values.username) );
+    //         //   console.log("alreadyUsedUserNames.get(values.username) = "+alreadyUsedUserNames.current.get(values.username) );
+    //         // console.log("fieldValidity.usernameValidity = "+fieldValidity.usernameValidity);
+    //         //
+    //         console.log("values.email = " + values.email);
+    //         //  console.log("alreadyUsedEmails.has(values.email) = "+alreadyUsedEmails.current.has(values.email) );
+    //         //    console.log("alreadyUsedEmails.get(values.email) = "+alreadyUsedEmails.currentget(values.email) );
+    //         // console.log("fieldValidity.emailValidit = "+fieldValidity.emailValidity);
+    //         //  console.log(" ");
+    //         console.log(alreadyUsedUserNames.current);
+    //         console.log(alreadyUsedEmails.current);
+    //
+    //
+    //     }, 3000);
+    //     return () => clearInterval(interval);
+    //
+    //     // if (fieldValidity.usernameValidity === false && ) {
+    //     //     requestServerForValidity('username');
+    //     // }
+    // }, [values.username, values.email]);
 
 
     const handleClickShowPassword = () => {
@@ -227,7 +286,7 @@ export default function Register() {
                             value={values.username}
                             onChange={handleChange('username')}
                         />
-                        {(fieldValidity.usernameValidity === true) ? <h1>valid</h1> : <h1>not valid</h1>}
+                        {(usernameValidity === true) ? <h1>valid</h1> : <h1>not valid</h1>}
                     </Grid>
                     <Grid item xs={12}>
                         <TextField
@@ -249,7 +308,7 @@ export default function Register() {
                             value={values.email}
                             onChange={handleChange('email')}
                         />
-                        {(fieldValidity.emailValidity === true) ? <h1>valid</h1> : <h1>not valid</h1>}
+                        {(emailValidity === true) ? <h1>valid</h1> : <h1>not valid</h1>}
 
                     </Grid>
                     <Grid item xs={12}>
