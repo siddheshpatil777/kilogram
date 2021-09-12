@@ -21,7 +21,7 @@ import { Snackbar} from "@material-ui/core";
 import CSRFToken from '../utility/csrftoken';
 import {useHistory} from "react-router-dom";
 import {UserDataContext} from "../../contexts/UserDataContext";
-import BASE_URL from "../METADATA";
+import {BASE_URL} from "../METADATA";
 import delay from "../utility/utility";
 import {Alert} from "@material-ui/lab";
 import Register from "./Register";

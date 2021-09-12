@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import BASE_URL from "../METADATA";
+import {BASE_URL} from "../METADATA";
 import CSRFToken from "../utility/csrftoken";
 
 

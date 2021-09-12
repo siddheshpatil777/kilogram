@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import fetchUserName from "../components/fetchers/fetchUserName";
-import BASE_URL from "../components/METADATA";
+import {BASE_URL} from "../components/METADATA";
 import CSRFToken from "../components/utility/csrftoken";
 
 export const UserDataContext = React.createContext({

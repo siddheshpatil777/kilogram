@@ -1,2 +1,3 @@
 const BASE_URL="http://localhost:8000";
-export default BASE_URL;
+const LOGIN_PAGE="/login";
+export {BASE_URL, LOGIN_PAGE};

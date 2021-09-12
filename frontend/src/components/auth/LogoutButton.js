@@ -3,10 +3,12 @@ import {TextField, FormControl, FormHelperText, Grid, Button, Input} from "@mate
 // import DjangoCSRFToken from 'django-react-csrftoken'
 import {UserDataContext} from "../../contexts/UserDataContext";
 import CSRFToken from '../utility/csrftoken';
-import {Link} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
+import {BASE_URL} from "../METADATA";
 
 const LogoutButton = (props) => {
     const {setUserName} = useContext(UserDataContext);
+    const history = useHistory();
     const onLogOutButtonPressed = (e) => {
         e.preventDefault();
         const requestOptions = {
@@ -16,7 +18,7 @@ const LogoutButton = (props) => {
             }
         }
         // console.log(requestOptions);
-        fetch("http://127.0.0.1:8000" + "/auth/logout", requestOptions)
+        fetch(BASE_URL + "/auth/logout", requestOptions)
             .then((response) => {
                 if (response.ok) {
                     console.log(response.json());
@@ -24,10 +26,13 @@ const LogoutButton = (props) => {
                 } else {
                     setUserName(null);
                 }
-            });
+            }).then(() => {
+                // history.push(BASE_URL+)
+        });
+
     }
-    return(
-        <Link to="/"><Button color="inherit" onClick={onLogOutButtonPressed}>LogOut</Button></Link>
+    return (
+        <Link><Button color="inherit" onClick={onLogOutButtonPressed}>LogOut</Button></Link>
     );
 
 }

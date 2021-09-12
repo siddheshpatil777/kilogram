@@ -17,7 +17,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import postCardImage from './temp.png';
 import CommentSection from './CommentSection';
-import BASE_URL from "./METADATA"
+import {BASE_URL} from "./METADATA"
 import useFetch from "./utility/useFetch";
 import CSRFToken from "./utility/csrftoken";
 

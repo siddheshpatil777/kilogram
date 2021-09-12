@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useLayoutEffect, useRef} from 'react';
 import clsx from 'clsx';
-import {makeStyles, styled} from '@material-ui/core/styles';
+import {makeStyles, styled, withStyles} from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 import FilledInput from '@material-ui/core/FilledInput';
@@ -14,7 +14,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import {FormControlLabel, FormLabel, Grid, Radio, RadioGroup, Snackbar} from "@material-ui/core";
 import useFetch from "../utility/myFetch";
-import BASE_URL from "../METADATA";
+import {BASE_URL} from "../METADATA";
 import CSRFToken from "../utility/csrftoken";
 import {useHistory} from "react-router-dom";
 import Button from "@material-ui/core/Button";
@@ -59,7 +59,29 @@ const useStyles = makeStyles((theme) => ({
         marginTop: theme.spacing(3),
     },
     textField: {
-        width: '25ch',
+        // '& label.Mui-focused': {
+        //     color: 'green',
+        // },
+        // '& .MuiInput-underline:after': {
+        //     borderBottomColor: 'green',
+        // },
+        // '& .MuiOutlinedInput-root': {
+        //     '& fieldset': {
+        //         borderColor: 'red',
+        //     },
+        //     '&:hover fieldset': {
+        //         borderColor: 'yellow',
+        //     },
+        //     '&.Mui-focused fieldset': {
+        //         borderColor: 'green',
+        //     },
+        // },
+    },
+    valid: {
+        borderColor: 'green',
+    },
+    invalid: {
+        borderColor: 'red',
     },
 }));
 
@@ -67,6 +89,29 @@ const useStyles = makeStyles((theme) => ({
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
+
+const CssTextField = withStyles({
+    root: {
+        '& label.Mui-focused': {
+            color: 'green',
+        },
+        '& .MuiInput-underline:after': {
+            borderBottomColor: 'green',
+        },
+        '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+                borderColor: 'red',
+            },
+            '&:hover fieldset': {
+                borderColor: 'yellow',
+            },
+            '&.Mui-focused fieldset': {
+                borderColor: 'green',
+            },
+        },
+    },
+})(OutlinedInput);
+
 
 export default function Register() {
     const snackBarClasses = makeStyles((theme) => ({
@@ -115,8 +160,8 @@ export default function Register() {
         usernameValidity: false,
         emailValidity: false,
     });
-    const [usernameValidity, setUsernameValidity] = useState(false);
-    const [emailValidity, setEmailValidity] = useState(false);
+    const [usernameValidity, setUsernameValidity] = useState(true);
+    const [emailValidity, setEmailValidity] = useState(true);
     const sendRegisterRequest = (e) => {
         e.preventDefault();
         const registerData = values;
@@ -246,6 +291,9 @@ export default function Register() {
                 </Typography>
                 <form className={classes.form} noValidate onSubmit={sendRegisterRequest}>
                     <TextField
+                        // className={clsx((usernameValidity===true?classes.valid:classes.invalid))}
+                        className={clsx(classes.textField)}
+                        error={!usernameValidity}
                         variant="outlined"
                         margin="normal"
                         required
@@ -270,6 +318,7 @@ export default function Register() {
                         onChange={handleChange('fullname')}
                     />
                     <TextField
+                        error={!emailValidity}
                         variant="outlined"
                         margin="normal"
                         required
@@ -285,6 +334,7 @@ export default function Register() {
                     <FormControl margin="normal" fullWidth variant="outlined">
                         <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                         <OutlinedInput
+
                             fullWidth
                             margin="normal"
                             id="outlined-adornment-password"
