@@ -172,6 +172,7 @@ export default function Register() {
                 'X-CSRFToken': CSRFToken(),
             },
             body: JSON.stringify(registerData),
+            credentials: 'include',
         }
         // console.log(requestOptions);
         fetch(BASE_URL + "/auth/register", requestOptions)
@@ -203,7 +204,11 @@ export default function Register() {
 
     const requestServerForValidity = async (prop, value) => {
         if (prop === 'username') {
-            fetch(BASE_URL + "/api/checkUserNameExistence?username=" + value.toString())
+            const requestOptions = {
+                method: 'GET',
+                credentials: 'include',
+            }
+            fetch(BASE_URL + "/api/checkUserNameExistence?username=" + value.toString(), requestOptions)
                 .then((res) => {
                     console.log(res);
                     return res.json();
@@ -218,7 +223,11 @@ export default function Register() {
                 console.log(err);
             });
         } else if (prop === 'email') {
-            fetch(BASE_URL + "/api/checkEmailExistence?email=" + value.toString())
+             const requestOptions = {
+                method: 'GET',
+                credentials: 'include',
+            }
+            fetch(BASE_URL + "/api/checkEmailExistence?email=" + value.toString(),requestOptions)
                 .then((res) => {
                     console.log(res);
                     return res.json();

@@ -14,7 +14,6 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from Post.serializers import PostDetailSerializer
 
 
-
 # class PostListView(ListCreateAPIView):
 #     serializer_class =PostDetailSerializer
 
@@ -28,56 +27,68 @@ from Post.serializers import PostDetailSerializer
 #         PO
 
 class PostListView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
+
+    def get_queryset(self):
+        return Post.objects.all().filter(author=self.request.user)
+
 
     def list(self, request):
         # Note the use of `get_queryset()` instead of `self.queryset`
         queryset = self.get_queryset()
-        print("request.user",request.user)
-        serializer = PostDetailSerializer(queryset, many=True,context={'userWhoAsked': request.user})
+        print("request for post from", request.user)
+        serializer = PostDetailSerializer(queryset, many=True, context={'userWhoAsked': request.user})
         # PostDetailSerializer()
         # return JsonResponse(serializer.data)
         # serializer.is_valid()
         return Response(serializer.data)
 
-    #  if(request.user.is_authenticated):
-    #      queryset = self.get_queryset()
-    #      serializer = PostDetailSerializer(queryset, many=True)
-    #      return J(serializer.data,status=)
-    # else:
-    #  return Response()
+
+#  if(request.user.is_authenticated):
+#      queryset = self.get_queryset()
+#      serializer = PostDetailSerializer(queryset, many=True)
+#      return J(serializer.data,status=)
+# else:
+#  return Response()
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([IsAuthenticated])
 def like(request):
+    print("got request for like")
     print(request.data)
     # data=json.loads(request.body)
-    data=request.data
+    data = request.data
     post_id = int(data['post_id'])
-    print("post id recieved ",post_id)
-    query=Post.objects.all().filter(pk=post_id)
-    if(len(query)>0):
-        post =query.first()
+    print("post id recieved ", post_id)
+    query = Post.objects.all().filter(pk=post_id)
+    if (len(query) > 0):
+        post = query.first()
         post.likers.add(request.user)
-        return JsonResponse({'success': True},status=status.HTTP_200_OK)
-    return JsonResponse({'success': False,'error':'PostId does not exist'},status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse({'success': True}, status=status.HTTP_200_OK)
+    return JsonResponse({'success': False, 'error': 'PostId does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+
+
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([IsAuthenticated])
 def dislike(request):
+    print("got request for dislike")
     # print(request.data)
-    data=json.loads(request.body)
+    data = json.loads(request.body)
     # data=request.data
     post_id = int(data['post_id'])
-    print("post id recieved ",post_id)
-    query=Post.objects.all().filter(pk=post_id)
-    if(len(query)>0):
-        post =query.first()
+    print("post id recieved ", post_id)
+    query = Post.objects.all().filter(pk=post_id)
+    if (len(query) > 0):
+        post = query.first()
         post.likers.remove(request.user)
         # post.likers.add(request.user)
-        return JsonResponse({'success': True},status=status.HTTP_200_OK)
-    return JsonResponse({'success': False,'error':'PostId does not exist'},status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse({'success': True}, status=status.HTTP_200_OK)
+    return JsonResponse({'success': False, 'error': 'PostId does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+
+
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([IsAuthenticated])

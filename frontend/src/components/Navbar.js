@@ -13,6 +13,8 @@ import LogoutButton from './auth/LogoutButton';
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
+        // minWidth : 20,
+         width: '100%',
     },
     menuButton: {
         marginRight: theme.spacing(2),

@@ -10,6 +10,7 @@ const fetchUserName = () => {
             "Accept": "application/json",
              'X-CSRFToken': CSRFToken(),
         },
+
          credentials: 'include'
     }).then((response) => {
 

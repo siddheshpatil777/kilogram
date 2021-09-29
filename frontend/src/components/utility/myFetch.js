@@ -18,6 +18,8 @@ const myFetch = (url,method, setMyState, sendData = {}) => {
             "Content-Type": 'application/json',
             'X-CSRFToken': CSRFToken(),
         },
+        credentials: 'include',
+
         body:"sdDDS",
     };
     // JSON.stringify({username:"sidd"}),

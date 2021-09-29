@@ -12,7 +12,13 @@ const useFetch = (url, method,sendData={}) => {
             if (method === "GET") {
                 options = {
                     signal: abortCont.signal,
+                    headers:{
+                        // 'Access-Control-Allow-Origin':'*',
+                    },
                     body:sendData,
+                    credentials: "same-origin",
+
+
                 };
             } else if (method === "POST") {
                 options = {
@@ -23,7 +29,8 @@ const useFetch = (url, method,sendData={}) => {
                         "Content-Type": 'application/json',
                         'X-CSRFToken': CSRFToken(),
                     },
-                    credentials: 'include',
+                     credentials: 'include',
+
                     body:sendData,
 
                 };
@@ -36,7 +43,7 @@ const useFetch = (url, method,sendData={}) => {
                     return res.json();
                 })
                 .then(data => {
-                    // console.log("FCCC",data);
+                    console.log("FCCC",data);
                     setError(null);
                     setData(data);
                     setIsPending(false);
@@ -44,6 +51,7 @@ const useFetch = (url, method,sendData={}) => {
                 })
                 .catch(err => {
                     // auto catches network / connection error
+                    // console
                     if (err.name === 'AbortError') {
                         console.log("fetch aborted");
                     } else {

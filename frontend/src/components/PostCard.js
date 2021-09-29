@@ -61,10 +61,12 @@ export default function PostCard({data}) {
             headers: {
                 "Content-Type": 'application/json',
                 'X-CSRFToken': CSRFToken(),
+
             },
             body: {
                 "post_id": id,
             },
+             credentials: 'include',
         };
         fetch(BASE_URL + "/api/like", options);
     };
@@ -75,6 +77,7 @@ export default function PostCard({data}) {
                 "Content-Type": 'application/json',
                 'X-CSRFToken': CSRFToken(),
             },
+             credentials: 'include',
             body: JSON.stringify({
                 "post_id": id,
             }),

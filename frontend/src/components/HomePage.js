@@ -8,10 +8,12 @@ import Paper from '@material-ui/core/Paper';
 import {BASE_URL} from './METADATA';
 import {makeStyles} from '@material-ui/core/styles';
 import {isEmpty} from './utility/utility';
+import OutlinedInput from "@material-ui/core/OutlinedInput";
 
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
+          width: '100%',
     },
     paper: {
         padding: theme.spacing(2),
@@ -25,24 +27,27 @@ const HomePage = () => {
     // this.context.setState({username: data.username});
     const {data, isPending, error} = useFetch(BASE_URL + '/api/posts');
     // const allPosts =
-        // console.log(data);
+    // console.log(data);
     // console.log(isPending);
     return (
-        <div>
+        <div  margin="normal">
             <Grid
                 container
                 spacing={1}
+                 margin="normal"
                 // justify="flex-around"
             >
-                <Grid
-                    container
-                    xs={3}
-                />
+
                 {data && data.map(function (postCard) {
                     // console.log("post card data =");
                     // console.log(postCard);
                     return (
-                        <Grid item xs={3} sm={3} key={postCard.id}>
+                        <Grid
+                            item xs={3}
+                            sm={3}
+                            key={postCard.id}
+                             margin="normal"
+                        >
                             <PostCard data={postCard}/>
                         </Grid>
                     )

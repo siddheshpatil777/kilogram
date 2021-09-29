@@ -2,7 +2,9 @@ import React, {Component} from 'react';
 import fetchUserName from "../components/fetchers/fetchUserName";
 import {BASE_URL} from "../components/METADATA";
 import CSRFToken from "../components/utility/csrftoken";
-
+import Cookies from 'universal-cookie';
+import {useHistory} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 export const UserDataContext = React.createContext({
     username: "sisdd",
     theme: 'dark',
@@ -32,18 +34,22 @@ class UserDataContextProvider extends Component {
         //     username:  fetchUserName(),
         // });
         console.log("sadja");
-        fetch(BASE_URL + "/api/currentInfo", {
+        const cookies = new Cookies();
+        let token=cookies.get('token');
+        console.log(token);
+        fetch(BASE_URL + "/api/auth/user", {
             method: "GET",
             headers: {
+                "Authorization":"Token "+token,
                 "Accept": "application/json",
-                 'X-CSRFToken': CSRFToken(),
             },
-            credentials: "include",
-        }).then((response) => {
 
+        }).then((response) => {
             if (response.ok) {
                 return response.json();
             }
+            console.log(this);
+            this.props.history.push('/login');
             return {username: null,};
         }).then((data) => {
             console.log("fetcting userName data=",data);
@@ -80,4 +86,4 @@ class UserDataContextProvider extends Component {
     }
 }
 
-export default UserDataContextProvider;
+export default withRouter(UserDataContextProvider);

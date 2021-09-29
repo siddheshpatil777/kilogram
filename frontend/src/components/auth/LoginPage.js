@@ -40,6 +40,7 @@ const LoginPage = (props) => {
                 'username': formUsername,
                 'password': password
             }),
+             credentials: 'include',
         }
         // console.log(requestOptions);
         fetch(BASE_URL + "/auth/login", requestOptions)

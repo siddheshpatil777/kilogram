@@ -13,14 +13,27 @@ import Typography from "@material-ui/core/Typography";
 import Navbar from "./Navbar";
 import Register from "./auth/Register";
 import SignIn from './auth/SignIn';
+import {makeStyles} from "@material-ui/core/styles";
+import clsx from "clsx";
 // const UserDataContext=React.createContext({username:null});
+// const useStyles =
+
 export default class App extends Component {
     constructor(props) {
         super(props);
     }
+
     render() {
+        const classes = makeStyles((theme) => ({
+            App: {
+                // flexGrow: 1,
+                width:"100%",
+            },
+
+        }));
         return (
-            <div className="App">
+
+            <div className={clsx(classes.App)}>
                 <UserDataContextProvider>
 
                     <Navbar/>
@@ -33,7 +46,7 @@ export default class App extends Component {
                             <SignIn props={{...this.props}}/>
                         </Route>
                         <Route exact path="/register">
-                            <Register />
+                            <Register/>
                         </Route>
 
                     </Switch>

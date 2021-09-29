@@ -13,7 +13,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
+import Cookies from 'universal-cookie';
 
 
 import { Snackbar} from "@material-ui/core";
@@ -88,25 +88,32 @@ const SignIn = (props) => {
                 'username': username,
                 'password': password
             }),
+            credentials: 'include',
         }
+
         // console.log(requestOptions);
-        fetch(BASE_URL + "/auth/login", requestOptions)
+        fetch(BASE_URL + "/api/auth/login", requestOptions)
             .then((response) => {
                 if (!response.ok) {
                     console.log("error");
                     setUserName(null);
                 } else {
+                console.log(setUserName);
                     setUserName(username);
                 }
                 return response.json();
             }).then((data) => {
             if (data) {
-                if (data.success === true) {
+                console.log(data);
+                // if (data.success === true) {
+                     const cookies = new Cookies();
+                    cookies.set('token', data.token, { path: '/' });
+                    console.log(cookies.get('myCat')); // Pacman
                     history.push('/');
-                } else {
-                    setSnackBar({severity: "error", message: data.message});
-                    setOpen(true);
-                }
+                // } else {
+                    // setSnackBar({severity: "error", message: data.message});
+                    // setOpen(true);
+                // }
             }
         })
 

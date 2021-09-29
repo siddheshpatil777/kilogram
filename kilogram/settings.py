@@ -27,7 +27,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 # CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS =True
+CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
 
@@ -38,13 +38,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',  # new
     'corsheaders',
     'rest_framework',
+    'rest_framework.authtoken',  # new
+    'rest_auth',  # new
+    'rest_auth.registration',
     'api.apps.ApiConfig',
     'frontend.apps.FrontendConfig',
     'Profile.apps.ProfileConfig',
     'Post.apps.PostConfig',
     'mptt',
+    # 'allauth',  # new
+    # 'allauth.account',  # new
+    # 'allauth.socialaccount',  # new
+    # 'rest_auth.registration',  # new
+    # 'rest_framework.authtoken'
 
 ]
 
@@ -60,14 +69,21 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
 ]
+
 REST_FRAMEWORK = {
     # 'DEFAULT_AUTHENTICATION_CLASSES': [
     #     'rest_framework.authentication.BasicAuthentication',
     #     'rest_framework.authentication.SessionAuthentication',
     # ]
 }
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}
 # 'django.middleware.csrf.CsrfViewMiddleware',
-
+# AUTHENTICATION_BACKENDS = (    "django.contrib.auth.backends.ModelBackend",    "allauth.account.auth_backends.AuthenticationBackend",
+# )
 ROOT_URLCONF = 'kilogram.urls'
 
 TEMPLATES = [
@@ -98,7 +114,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 # Password validation
@@ -136,4 +152,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-
+SITE_ID = 1
