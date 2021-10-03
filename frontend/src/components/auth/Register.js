@@ -174,7 +174,7 @@ export default function Register() {
             body: JSON.stringify(registerData),
         }
         // console.log(requestOptions);
-        fetch(BASE_URL + "/auth/register", requestOptions)
+        fetch(BASE_URL + "/api/auth/register", requestOptions)
             .then((response) => {
                 if (!response.ok) {
                     console.log("error");
@@ -185,17 +185,15 @@ export default function Register() {
             }).then((data) => {
             console.log(data);
             if (data) {
-                if (data.success === true) {
-                    setSnackBar({severity: "success", message: data.message});
-                    setTimeout(() => {
-                        history.push('/');
-                    }, 3000);
-                } else {
-                    setSnackBar({severity: "error", message: data.message});
-                }
+
+                setSnackBar({severity: "success", message: "account created successfully"});
+                setTimeout(() => {
+                    history.push('/login');
+                }, 3000);
+
             } else {
                 console.log("null data error");
-                setSnackBar({severity: "error", message: "errrrrrrrorrrr"});
+                setSnackBar({severity: "error", message: "invalid credentials"});
             }
             setOpen(true);
         });
@@ -205,7 +203,7 @@ export default function Register() {
         if (prop === 'username') {
             const requestOptions = {
                 method: 'GET',
-                credentials: 'include',
+
             }
             fetch(BASE_URL + "/api/checkUserNameExistence?username=" + value.toString(), requestOptions)
                 .then((res) => {
@@ -222,11 +220,10 @@ export default function Register() {
                 console.log(err);
             });
         } else if (prop === 'email') {
-             const requestOptions = {
+            const requestOptions = {
                 method: 'GET',
-                credentials: 'include',
             }
-            fetch(BASE_URL + "/api/checkEmailExistence?email=" + value.toString(),requestOptions)
+            fetch(BASE_URL + "/api/checkEmailExistence?email=" + value.toString(), requestOptions)
                 .then((res) => {
                     console.log(res);
                     return res.json();
