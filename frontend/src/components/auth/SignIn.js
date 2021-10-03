@@ -16,7 +16,7 @@ import Container from '@material-ui/core/Container';
 import Cookies from 'universal-cookie';
 
 
-import { Snackbar} from "@material-ui/core";
+import {Snackbar} from "@material-ui/core";
 // import DjangoCSRFToken from 'django-react-csrftoken'
 import CSRFToken from '../utility/csrftoken';
 import {useHistory} from "react-router-dom";
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
 const SignIn = (props) => {
 
 
-  const classes = useStyles();
+    const classes = useStyles();
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
             return;
@@ -75,7 +75,7 @@ const SignIn = (props) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const history = useHistory();
-    const {setUserName, updateUserName} = useContext(UserDataContext);
+    const {setUserName, updateUserName, updateToken} = useContext(UserDataContext);
     const onLoginButtonPressed = async (e) => {
         e.preventDefault();
         const requestOptions = {
@@ -88,17 +88,21 @@ const SignIn = (props) => {
                 'username': username,
                 'password': password
             }),
-            credentials: 'include',
-        }
 
+        }
         // console.log(requestOptions);
         fetch(BASE_URL + "/api/auth/login", requestOptions)
             .then((response) => {
+                console.log("got login response");
                 if (!response.ok) {
-                    console.log("error");
+                    console.log("login fail");
                     setUserName(null);
+                    setSnackBar({severity: "error", message: "invalid credentials"});
+                setOpen(true);
+                    return null;
                 } else {
-                console.log(setUserName);
+                    console.log("login success");
+                    console.log(setUserName);
                     setUserName(username);
                 }
                 return response.json();
@@ -106,21 +110,22 @@ const SignIn = (props) => {
             if (data) {
                 console.log(data);
                 // if (data.success === true) {
-                     const cookies = new Cookies();
-                    cookies.set('token', data.token, { path: '/' });
-                    console.log(cookies.get('myCat')); // Pacman
-                    history.push('/');
+                const cookies = new Cookies();
+                cookies.set('token', data.token, {path: '/'});
+                updateToken(data.token);
+                // console.log(cookies.get('myCat')); // Pacman
+                history.push('/');
                 // } else {
-                    // setSnackBar({severity: "error", message: data.message});
-                    // setOpen(true);
+                // setSnackBar({severity: "error", message: data.message});
+                // setOpen(true);
                 // }
             }
-        })
+        });
 
     }
-    const goToRegisterPage=(e)=>{
-         e.preventDefault();
-         history.push('/register');
+    const goToRegisterPage = (e) => {
+        e.preventDefault();
+        history.push('/register');
     }
     const onUsernameChange = (e) => {
         // e.preventDefault();
@@ -165,7 +170,7 @@ const SignIn = (props) => {
                         type="password"
                         id="password"
                         autoComplete="current-password"
-                         onChange={onPasswordChange}
+                        onChange={onPasswordChange}
                     />
                     <FormControlLabel
                         control={<Checkbox value="remember" color="primary"/>}
@@ -199,7 +204,7 @@ const SignIn = (props) => {
             <Box mt={8}>
                 <Copyright/>
             </Box>
-             <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity={snackBar.severity}>
                     {snackBar.message}
                 </Alert>

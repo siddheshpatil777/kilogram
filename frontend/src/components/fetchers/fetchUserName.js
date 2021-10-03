@@ -9,6 +9,7 @@ const fetchUserName = () => {
         headers: {
             "Accept": "application/json",
              'X-CSRFToken': CSRFToken(),
+            
         },
 
          credentials: 'include'

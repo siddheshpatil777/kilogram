@@ -15,19 +15,24 @@ class UserDataContextProvider extends Component {
     // setUserName=(username)=>{this.setState({username: username});}
     //         setUserName:this.setUserName,
     state = {
+        token:null,
         username: null,
         theme: 'dark',
         updateUserName: null,
-        setUserName: null
+        setUserName: null,
+        updateToken:null,
     }
 
     constructor(props) {
         super(props);
         this.updateUserName = this.updateUserName.bind(this);
         this.setUserName = this.setUserName.bind(this);
+        this.updateToken = this.updateToken.bind(this);
+
     }
 
-    componentDidMount() {
+    componentWillMount() {
+
         // this.updateUserName();
         // console.log("fetched " + username);
         // this.setState({
@@ -42,6 +47,7 @@ class UserDataContextProvider extends Component {
             headers: {
                 "Authorization":"Token "+token,
                 "Accept": "application/json",
+
             },
 
         }).then((response) => {
@@ -59,7 +65,8 @@ class UserDataContextProvider extends Component {
         });
         this.setState({
             updateUserName: this.updateUserName,
-            setUserName: this.setUserName
+            setUserName: this.setUserName,
+             updateToken: this.updateToken,
         });
     }
 
@@ -68,6 +75,11 @@ class UserDataContextProvider extends Component {
         // let username = "sid";
         this.setState({
             username: username,
+        });
+    }
+    async updateToken(token) {
+        this.setState({
+            token: token,
         });
     }
 

@@ -24,10 +24,14 @@ SECRET_KEY = 'hirtzp(qgxbbhc2w7!c-_!drk7advsgfd&_h40r74d7sxvqjs@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-# CORS_ORIGIN_ALLOW_ALL = True
+# ALLOWED_HOSTS = ['http://localhost:8000','http://localhost:3000']
+# CORS_ALLOW_ALL_ORIGINS = True # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
+# CORS_ALLOW_CREDENTIALS = True
+#
+# ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
+# CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
 
@@ -39,46 +43,45 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',  # new
-    'corsheaders',
     'rest_framework',
-    'rest_framework.authtoken',  # new
-    'rest_auth',  # new
-    'rest_auth.registration',
+    'knox',
     'api.apps.ApiConfig',
     'frontend.apps.FrontendConfig',
     'Profile.apps.ProfileConfig',
     'Post.apps.PostConfig',
     'mptt',
-    # 'allauth',  # new
-    # 'allauth.account',  # new
-    # 'allauth.socialaccount',  # new
-    # 'rest_auth.registration',  # new
-    # 'rest_framework.authtoken'
-
+'corsheaders',
 ]
+#
 
 MIDDLEWARE = [
 
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+'corsheaders.middleware.CorsMiddleware',
+'django.middleware.common.CommonMiddleware',
+    # 'kilogram.middleware.corsMiddleware',
+    'kilogram.middleware.open_access_middleware',
 
 ]
 
+# REST_FRAMEWORK = {
+#     # 'DEFAULT_AUTHENTICATION_CLASSES': [
+#     #     'rest_framework.authentication.BasicAuthentication',
+#     #     'rest_framework.authentication.SessionAuthentication',
+#     # ]
+# }
 REST_FRAMEWORK = {
-    # 'DEFAULT_AUTHENTICATION_CLASSES': [
-    #     'rest_framework.authentication.BasicAuthentication',
-    #     'rest_framework.authentication.SessionAuthentication',
-    # ]
-}
-REST_FRAMEWORK = {
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
+        'knox.auth.TokenAuthentication',
     ],
 }
 # 'django.middleware.csrf.CsrfViewMiddleware',

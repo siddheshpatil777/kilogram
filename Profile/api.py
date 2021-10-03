@@ -1,21 +1,22 @@
 from rest_framework import generics, permissions
-from rest_framework.authtoken.models import Token
+# from rest_framework.authtoken.models import Token
+from knox.models import AuthToken
 from rest_framework.response import Response
 
 from Profile.serializers import RegisterUserSerializer, UserSerializer, LoginUserSerializer
 from rest_framework.authtoken.views import ObtainAuthToken
 
 
-class RegisterAPI(generics.GenericAPIView, ObtainAuthToken):
+class RegisterAPI(generics.GenericAPIView):
     serializer_class = RegisterUserSerializer
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        token, created = Token.objects.get_or_create(user=user)
+        token= AuthToken.objects.create(user)[1]
         return Response({
             "user": UserSerializer(user,context=self.get_serializer_context()).data,
-            "token": token.key,
+            "token": token,
         })
 class LoginAPI(generics.GenericAPIView, ObtainAuthToken):
     serializer_class = LoginUserSerializer
@@ -23,10 +24,10 @@ class LoginAPI(generics.GenericAPIView, ObtainAuthToken):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user=serializer.validated_data
-        token, created = Token.objects.get_or_create(user=user)
+        token= AuthToken.objects.create(user)[1]
         return Response({
             "user": UserSerializer(user,context=self.get_serializer_context()).data,
-            "token": token.key,
+            "token": token,
         })
 class UserAPI(generics.RetrieveAPIView,ObtainAuthToken):
     permission_classes = [

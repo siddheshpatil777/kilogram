@@ -1,7 +1,8 @@
 import json
 from json import loads, load
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
+from rest_framework import generics, permissions
+from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.generics import ListCreateAPIView
 from rest_framework.response import Response
 
@@ -26,15 +27,16 @@ from Post.serializers import PostDetailSerializer
 #     if(request.method==request.POST):
 #         PO
 
-class PostListView(generics.ListCreateAPIView):
-    permission_classes = [IsAuthenticated]
+class PostListView(generics.ListCreateAPIView,ObtainAuthToken):
+    permission_classes = [
+        permissions.IsAuthenticated
+    ]
+    authentication_classes = [TokenAuthentication]
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
 
     def get_queryset(self):
         return Post.objects.all().filter(author=self.request.user)
-
-
     def list(self, request):
         # Note the use of `get_queryset()` instead of `self.queryset`
         queryset = self.get_queryset()
@@ -54,7 +56,7 @@ class PostListView(generics.ListCreateAPIView):
 #  return Response()
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated])
+@permission_classes([permissions.IsAuthenticated])
 def like(request):
     print("got request for like")
     print(request.data)
@@ -72,7 +74,7 @@ def like(request):
 
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated])
+@permission_classes([permissions.IsAuthenticated])
 def dislike(request):
     print("got request for dislike")
     # print(request.data)
@@ -91,7 +93,7 @@ def dislike(request):
 
 @api_view(['POST'])
 @authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated])
+@permission_classes([permissions.IsAuthenticated])
 def commentSection(request):
     # data = json.loads(request.body)
     data = request.data

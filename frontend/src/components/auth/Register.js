@@ -172,7 +172,6 @@ export default function Register() {
                 'X-CSRFToken': CSRFToken(),
             },
             body: JSON.stringify(registerData),
-            credentials: 'include',
         }
         // console.log(requestOptions);
         fetch(BASE_URL + "/auth/register", requestOptions)

@@ -25,7 +25,7 @@ const HomePage = () => {
     // const classes = useStyles();
     // const [data, isPending, isError] = useFetch('/api/currentInfo');
     // this.context.setState({username: data.username});
-    const {data, isPending, error} = useFetch(BASE_URL + '/api/posts');
+    const {data, isPending, error} = useFetch(BASE_URL + '/api/posts',"GET",{});
     // const allPosts =
     // console.log(data);
     // console.log(isPending);
