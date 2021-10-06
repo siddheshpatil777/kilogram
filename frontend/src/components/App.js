@@ -32,10 +32,8 @@ export default class App extends Component {
 
         }));
         return (
-
             <div className={clsx(classes.App)}>
                 <UserDataContextProvider>
-
                     <Navbar/>
                     <Switch>
                         <Route exact path="/">

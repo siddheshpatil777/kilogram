@@ -4,13 +4,15 @@ from Profile.views import checkUsernameExistence, checkEmailExistence
 from .views import CommentListView,getMyInfo
 from Post.views import PostListView,like,dislike
 
+
+
 urlpatterns = [
+    # path('posts', PostListView.as_view()),
     path('currentInfo', getMyInfo),
-    path('posts', PostListView.as_view()),
     path('commentSection', CommentListView.as_view()),
     path('checkEmailExistence', checkEmailExistence),
     path('checkUserNameExistence', checkUsernameExistence),
-    path('posts', PostListView.as_view()),
+    # path('posts', PostListView.as_view()),
     path('like',like),
     path('dislike', dislike),
 

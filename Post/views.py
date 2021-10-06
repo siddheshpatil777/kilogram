@@ -27,21 +27,25 @@ from Post.serializers import PostDetailSerializer
 #     if(request.method==request.POST):
 #         PO
 
-class PostListView(generics.ListCreateAPIView,ObtainAuthToken):
-    permission_classes = [
-        permissions.IsAuthenticated
-    ]
-    authentication_classes = [TokenAuthentication]
+class PostListView(generics.ListCreateAPIView):
+    # permission_classes = [
+    #     permissions.IsAuthenticated
+    # ]
+    # authentication_classes = [TokenAuthentication]
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
-
+    # def get_object(self):
+    #     return self.request.user
     def get_queryset(self):
-        return Post.objects.all().filter(author=self.request.user)
+        return Post.objects.all()
+            # .filter(author=self.request.user)
     def list(self, request):
         # Note the use of `get_queryset()` instead of `self.queryset`
         queryset = self.get_queryset()
         print("request for post from", request.user)
-        serializer = PostDetailSerializer(queryset, many=True, context={'userWhoAsked': request.user})
+        # serializer = PostDetailSerializer(queryset, many=True, context={'userWhoAsked': request.user})
+        serializer = PostDetailSerializer(queryset, many=True)
+
         # PostDetailSerializer()
         # return JsonResponse(serializer.data)
         # serializer.is_valid()
