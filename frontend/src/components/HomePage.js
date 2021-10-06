@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import Navbar from './Navbar';
 import UserDataContext from "../contexts/UserDataContext";
 import useFetch from "./utility/useFetch";
+import myFetch from "./utility/myFetch";
 import PostCard from "./PostCard"
 import {Grid} from "@material-ui/core";
 import Paper from '@material-ui/core/Paper';
@@ -28,6 +29,7 @@ const HomePage = () => {
     // const [data, isPending, isError] = useFetch('/api/currentInfo');
     // this.context.setState({username: data.username});
     const {data, isPending, error} = useFetch(BASE_URL + '/api/auth/posts');
+    // myFetch
     // const allPosts =
     // console.log(data);
     // console.log(isPending);

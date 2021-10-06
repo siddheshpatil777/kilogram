@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
@@ -20,7 +20,7 @@ import CommentSection from './CommentSection';
 import {BASE_URL} from "./METADATA"
 import useFetch from "./utility/useFetch";
 import CSRFToken from "./utility/csrftoken";
-
+import myFetch from "./utility/myFetch";
 const useStyles = makeStyles((theme) => ({
     root: {
         maxWidth: 1345,
@@ -49,41 +49,30 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PostCard({data}) {
     // {title,content,date_posted,author}
-    const {author, content, date_posted, id, isLiked, title, views} = data;
+    const {author, content, date_posted, id, title, views} = data;
+    const [isLiked,setIsLiked]=useState(data.isLiked);
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
     const likeThisPost = () => {
-        const options = {
-            method: 'POST',
-            headers: {
-                "Content-Type": 'application/json',
-                'X-CSRFToken': CSRFToken(),
-
-            },
-            body: {
-                "post_id": id,
-            },
-             credentials: 'include',
-        };
-        fetch(BASE_URL + "/api/like", options);
+        myFetch(BASE_URL + "/api/like","POST",{"post_id": id})
+            .then(res=>{
+                if(res.ok){
+                    // isLiked=true;
+                    setIsLiked(true);
+                }
+            });
     };
     const dislikeThisPost = () => {
-        const options = {
-            method: 'POST',
-            headers: {
-                "Content-Type": 'application/json',
-                'X-CSRFToken': CSRFToken(),
-            },
-             credentials: 'include',
-            body: JSON.stringify({
-                "post_id": id,
-            }),
-        };
-        fetch(BASE_URL + "/api/dislike", options);
-        // const {data, isPending, error}=useFetch
+        myFetch(BASE_URL + "/api/dislike", "POST",{"post_id": id}).then(res=>{
+                if(res.ok){
+                    // isLiked=true;
+                    setIsLiked(false);
+                }
+            });
+
     };
     const handleLikeButtonPressed = (e) => {
         e.preventDefault();

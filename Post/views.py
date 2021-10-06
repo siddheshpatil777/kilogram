@@ -43,8 +43,8 @@ class PostListView(generics.ListCreateAPIView):
         # Note the use of `get_queryset()` instead of `self.queryset`
         queryset = self.get_queryset()
         print("request for post from", request.user)
-        # serializer = PostDetailSerializer(queryset, many=True, context={'userWhoAsked': request.user})
-        serializer = PostDetailSerializer(queryset, many=True)
+        serializer = PostDetailSerializer(queryset, many=True, context={'userWhoAsked': request.user})
+        # serializer = PostDetailSerializer(queryset, many=True)
 
         # PostDetailSerializer()
         # return JsonResponse(serializer.data)
@@ -59,13 +59,11 @@ class PostListView(generics.ListCreateAPIView):
 # else:
 #  return Response()
 @api_view(['POST'])
-@authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 def like(request):
     print("got request for like")
-    print(request.data)
-    # data=json.loads(request.body)
-    data = request.data
+    # data = request.data
+    data = json.loads(request.body)
     post_id = int(data['post_id'])
     print("post id recieved ", post_id)
     query = Post.objects.all().filter(pk=post_id)
@@ -77,13 +75,12 @@ def like(request):
 
 
 @api_view(['POST'])
-@authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 def dislike(request):
     print("got request for dislike")
     # print(request.data)
+    # data = json.loads(request.body)
     data = json.loads(request.body)
-    # data=request.data
     post_id = int(data['post_id'])
     print("post id recieved ", post_id)
     query = Post.objects.all().filter(pk=post_id)
@@ -96,13 +93,12 @@ def dislike(request):
 
 
 @api_view(['POST'])
-@authentication_classes([SessionAuthentication, BasicAuthentication])
+# @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 def commentSection(request):
     # data = json.loads(request.body)
     data = request.data
     post_id = data['post_id']
-
     Comment.objects.all().filter(post=post_id)
 
 # @api_view(['GET', ])
