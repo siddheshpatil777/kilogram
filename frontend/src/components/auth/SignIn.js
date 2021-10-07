@@ -114,6 +114,9 @@ const SignIn = (props) => {
                 cookies.set('token', data.token, {path: '/'});
                 updateToken(data.token);
                 // console.log(cookies.get('myCat')); // Pacman
+                window.addEventListener("popstate", () => {
+                  history.go(1);
+                });
                 history.push('/');
                 // } else {
                 // setSnackBar({severity: "error", message: data.message});

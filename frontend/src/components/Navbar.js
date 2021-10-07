@@ -22,6 +22,16 @@ const useStyles = makeStyles((theme) => ({
     title: {
         flexGrow: 1,
     },
+    navBar:{
+        backgroundColor:"#573280",
+    },
+    buttons:{
+     backgroundColor:"#F6E8EA",
+         margin: theme.spacing(1),
+        '&:hover': {
+       background: "#f45b69",
+    },
+    },
 }));
 
 export default function NavBar() {
@@ -56,7 +66,7 @@ export default function NavBar() {
     const registerButton = <Link to="/register"><Button color="inherit">Register</Button></Link>
     return (
         <div className={classes.root}>
-            <AppBar position="static">
+            <AppBar className={classes.navBar} position="static">
                 <Toolbar>
                     <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
                         <MenuIcon/>
@@ -67,13 +77,12 @@ export default function NavBar() {
 
                     {username === null &&
                     <div>
-                        <Link to="/login"><Button color="secondary">Login</Button></Link>
-
-                        <Link to="/register"><Button color="secondary">Register</Button></Link>
+                        <Link to="/login"><Button className={classes.buttons}  >Login</Button></Link>
+                        <Link to="/register"><Button className={classes.buttons}  >Register</Button></Link>
                     </div>
                     }
                     {username &&
-                    <LogoutButton/>
+                    <LogoutButton className={classes.buttons} />
                     }
                 </Toolbar>
             </AppBar>

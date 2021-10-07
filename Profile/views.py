@@ -1,9 +1,10 @@
 from django.core.exceptions import ValidationError
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
+from django_rest import permissions
 from rest_framework import generics, status
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -101,11 +102,12 @@ def register(request):
 
 
 @api_view(['POST', ])
+@permission_classes([permissions.IsAuthenticated])
 def logoutFunc(request):
     print("got logout")
-    if request.user.is_authenticated:
-        logout(request)
-        return JsonResponse({'taskCompleted': True, 'message': "logged out succesFully"}, status=status.HTTP_200_OK)
+    # if request.user.is_authenticated:
+    #     logout(request)
+    #     return JsonResponse({'taskCompleted': True, 'message': "logged out succesFully"}, status=status.HTTP_200_OK)
     return JsonResponse({'taskCompleted': False, 'message': "how the fuck are you supposed to log out"},
                         status=status.HTTP_200_OK)
 

@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useContext} from 'react';
 import CSRFToken from "./csrftoken";
 import Cookies from "universal-cookie";
 const myFetch = (url,method,sendData = {}) => {
@@ -7,6 +7,7 @@ const myFetch = (url,method,sendData = {}) => {
     let token = cookies.get('token');
     const myHeaders = new Headers();
      myHeaders.append("Authorization", "Token " + token);
+
     const options = {
         method: method,
         headers: myHeaders,
