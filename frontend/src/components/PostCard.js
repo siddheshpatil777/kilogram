@@ -60,7 +60,6 @@ export default function PostCard({data}) {
         myFetch(BASE_URL + "/api/like","POST",{"post_id": id})
             .then(res=>{
                 if(res.ok){
-                    // isLiked=true;
                     setIsLiked(true);
                 }
             });
@@ -68,11 +67,9 @@ export default function PostCard({data}) {
     const dislikeThisPost = () => {
         myFetch(BASE_URL + "/api/dislike", "POST",{"post_id": id}).then(res=>{
                 if(res.ok){
-                    // isLiked=true;
                     setIsLiked(false);
                 }
             });
-
     };
     const handleLikeButtonPressed = (e) => {
         e.preventDefault();

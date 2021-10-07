@@ -32,6 +32,7 @@ def getMyInfo(request):
 
 
 class CommentListView(ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = CommentSerializer
     queryset=Comment.objects.all()
     def list(self, request):

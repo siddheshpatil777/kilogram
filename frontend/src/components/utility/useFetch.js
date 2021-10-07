@@ -61,7 +61,6 @@ import {BASE_URL} from "../METADATA";
 //     return {data, isPending, error};
 // }
 const useFetch = (url) => {
-    const abortCont = new AbortController();
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(null);
     const [error, setError] = useState(null);
@@ -72,12 +71,14 @@ const useFetch = (url) => {
     // console.log("url " + url);
     // console.log("method " + method);
     myHeaders.append("Authorization", "Token " + token);
-    let options = {
+
+    useEffect(() => {
+        const abortCont = new AbortController();
+  let options = {
         method: 'GET',
         signal: abortCont.signal,
         headers: myHeaders
     };
-    useEffect(() => {
         setLoading('loading...')
         setData(null);
         setError(null);
