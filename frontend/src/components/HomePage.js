@@ -3,7 +3,7 @@ import Navbar from './Navbar';
 import UserDataContext from "../contexts/UserDataContext";
 import useFetch from "./utility/useFetch";
 import myFetch from "./utility/myFetch";
-import PostCard from "./PostCard"
+import PostCard from "./posts/PostCard"
 import {Grid} from "@material-ui/core";
 import Paper from '@material-ui/core/Paper';
 import {BASE_URL} from './METADATA';

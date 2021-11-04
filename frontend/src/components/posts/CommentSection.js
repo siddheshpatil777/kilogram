@@ -1,5 +1,5 @@
-import useFetch from "./utility/useFetch";
-import {BASE_URL} from "./METADATA";
+import useFetch from "../utility/useFetch";
+import {BASE_URL} from "../METADATA";
 import MyComment from "./MyComment";
 
 const CommentSection = () => {

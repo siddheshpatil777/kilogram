@@ -14,7 +14,7 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 
 from Post.serializers import PostDetailSerializer
 
-
+from .models import Post
 # class PostListView(ListCreateAPIView):
 #     serializer_class =PostDetailSerializer
 
@@ -26,11 +26,49 @@ from Post.serializers import PostDetailSerializer
 # def likeIt(request):
 #     if(request.method==request.POST):
 #         PO
+class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [
+        permissions.IsAuthenticated
+    ]
+    queryset = Post.objects.all()
+    serializer_class = PostDetailSerializer
+    def get_queryset(self,id):
+        return Post.objects.all().filter(id=id)
+    def get(self, request, *args, **kwargs):
+        data = json.loads(request.body)
+        post_id=data['post_id']
+        query = self.get_queryset(post_id)
+        if(len(query)==0):
+            return JsonResponse({'success': False, 'error': 'PostId does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = PostDetailSerializer(query[0],context={'userWhoAsked': request.user})
+        return Response(serializer.data)
+    def post(self, request, *args, **kwargs):
+
+        # request.data['author']=request.user
+        # print(request.data)
+        data=request.data
+        # thePost=self.serializer_class(data=request.data)
+        # thePost.is_valid()
+        thePost=Post(title=data['title'],content=data['content'],author=request.user,image=data['image'])
+        x=self.serializer_class(thePost,context={'userWhoAsked': request.user})
+        # x.is_valid()
+        print(x.data)
+        # if():
+        #     print("got correct data")
+        # thePost.
+        # data = json.loads(request.body)
+        # post_id=data['post_id']
+        # query = self.get_queryset(post_id)
+        # if(len(query)==0):
+        return JsonResponse({'success': False, 'error': 'PostId does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        # serializer = PostDetailSerializer(query[0],context={'userWhoAsked': request.user})
+        # return Response(serializer.data)
+
 
 class PostListView(generics.ListCreateAPIView):
-    # permission_classes = [
-    #     permissions.IsAuthenticated
-    # ]
+    permission_classes = [
+        permissions.IsAuthenticated
+    ]
     # authentication_classes = [TokenAuthentication]
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer

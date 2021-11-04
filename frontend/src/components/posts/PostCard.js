@@ -15,12 +15,12 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import postCardImage from './temp.png';
+import postCardImage from '../temp.png';
 import CommentSection from './CommentSection';
-import {BASE_URL} from "./METADATA"
-import useFetch from "./utility/useFetch";
-import CSRFToken from "./utility/csrftoken";
-import myFetch from "./utility/myFetch";
+import {BASE_URL} from "../METADATA"
+import useFetch from "../utility/useFetch";
+import CSRFToken from "../utility/csrftoken";
+import myFetch from "../utility/myFetch";
 const useStyles = makeStyles((theme) => ({
     root: {
         maxWidth: 1345,
