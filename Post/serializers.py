@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 
-from Post.models import Post
+from Post.models import Post, Comment
+
 
 class PostDetailSerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,18 +30,18 @@ class PostDetailSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Post
+        model = Comment
         fields = ('id','content', 'date_posted', 'author', )
 
+
     def to_representation(self, instance):
-        """Convert `username` to lowercase."""
         ret = super().to_representation(instance)
         ret['post_id'] =instance.post.id
         if(instance.parent):
             ret['parent'] = instance.parent.id
         else:
             ret['parent'] = 0
-
+        ret['author_name'] = instance.author.username
         return ret
 # class HighScoreSerializer(serializers.BaseSerializer):
 #
