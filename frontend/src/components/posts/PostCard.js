@@ -50,14 +50,14 @@ const useStyles = makeStyles((theme) => ({
 export default function PostCard({data}) {
     // {title,content,date_posted,author}
     const {author, content, date_posted, id, title, views} = data;
-    const [isLiked,setIsLiked]=useState(data.isLiked);
+    const [isLiked,setIsLiked]=useState(data.is_liked);
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
     const likeThisPost = () => {
-        myFetch(BASE_URL + "/api/like","POST",{"post_id": id})
+        myFetch(BASE_URL + "/api/post/like","POST",{"post_id": id})
             .then(res=>{
                 if(res.ok){
                     setIsLiked(true);
@@ -65,7 +65,7 @@ export default function PostCard({data}) {
             });
     };
     const dislikeThisPost = () => {
-        myFetch(BASE_URL + "/api/dislike", "POST",{"post_id": id}).then(res=>{
+        myFetch(BASE_URL + "/api/post/dislike", "POST",{"post_id": id}).then(res=>{
                 if(res.ok){
                     setIsLiked(false);
                 }

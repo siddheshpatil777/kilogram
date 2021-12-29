@@ -1,3 +1,4 @@
+import React, { Component }  from 'react';
 import {useState, useEffect, useContext} from 'react';
 import CSRFToken from "./csrftoken";
 import Cookies from "universal-cookie";

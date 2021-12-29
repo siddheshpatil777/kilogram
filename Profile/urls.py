@@ -2,7 +2,7 @@ from django.urls import path, include
 from .views import LoginUserView, loginFunc, logoutFunc, register
 from .api import RegisterAPI, LoginAPI,UserAPI
 from knox import views as knox_views
-from Post.views import PostListView,like,dislike
+from Post.views import PostListView
 urlpatterns = [
     path('/',  include('knox.urls')),
     path('register', RegisterAPI.as_view()),

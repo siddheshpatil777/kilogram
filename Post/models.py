@@ -12,7 +12,7 @@ class Post(models.Model):
 	date_posted = models.DateTimeField(default=timezone.now)
 	author = models.ForeignKey(User, on_delete=models.CASCADE)
 	views = models.ManyToManyField(User, related_name='post_views', blank = True)
-	likers = models.ManyToManyField(User, related_name = 'likers', blank = True)
+	likers = models.ManyToManyField(User, related_name = 'post_likers', blank = True)
 	image = models.ImageField(upload_to='images/',default="images/temp.png")
 	# tags = models.ManyToManyField(Tag, related_name = 'tags', blank = True)
 	# type = models.IntegerField(default=0)
@@ -26,11 +26,11 @@ class Post(models.Model):
 
 class Comment(MPTTModel):
 	content = models.TextField()
-	date_posted = models.DateTimeField(default=timezone.now)
+	date_posted = models.DateTimeField(auto_now_add=True)
 	post = models.ForeignKey(Post, on_delete=models.CASCADE)
 	author = models.ForeignKey(User, on_delete=models.CASCADE)
 	parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True,blank=True, related_name='children')
-
+	likers = models.ManyToManyField(User, related_name='comment_likers', blank=True)
 	# class MPTTMeta:
 		# level_attr = 'mptt_level'
 		# order_insertion_by = ['order']

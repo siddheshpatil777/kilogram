@@ -15,6 +15,8 @@ import Register from "./auth/Register";
 import SignIn from './auth/SignIn';
 import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
+import Profiles from "./profile/Profiles";
+import ProfilePage from "./profile/ProfilePage";
 // const UserDataContext=React.createContext({username:null});
 // const useStyles =
 
@@ -36,8 +38,8 @@ export default class App extends Component {
                 <UserDataContextProvider>
                     <Navbar/>
                     <Switch>
-                        <Route exact path="/">
-                            <HomePage/>
+                        <Route  path="/profile/:username" >
+                           <ProfilePage/>
                         </Route>
                         <Route exact path="/login">
                             {/*<LoginPage props={{...this.props}}/>*/}
@@ -46,6 +48,11 @@ export default class App extends Component {
                         <Route exact path="/register">
                             <Register/>
                         </Route>
+                        <Route exact path="/">
+                            <HomePage/>
+                        </Route>
+
+
 
                     </Switch>
                 </UserDataContextProvider>

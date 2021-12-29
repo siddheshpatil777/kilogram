@@ -1,3 +1,4 @@
+import React, { Component }  from 'react';
 import {useState, useEffect, useContext} from 'react';
 import CSRFToken from "./csrftoken";
 import {UserDataContext} from "../../contexts/UserDataContext";
@@ -73,7 +74,8 @@ const useFetch = (url) => {
     myHeaders.append("Authorization", "Token " + token);
 
     useEffect(() => {
-        const abortCont = new AbortController();
+        const abortCont = new window.AbortController();
+            // new AbortController();
   let options = {
         method: 'GET',
         signal: abortCont.signal,

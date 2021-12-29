@@ -2,7 +2,7 @@ from django.urls import path
 # from .views import RoomView,CreateRoomView,GetRoom,JoinRoom,UserInRoom,LeaveRoom,UpdateRoom
 from Profile.views import checkUsernameExistence, checkEmailExistence
 from .views import CommentListView,getMyInfo
-from Post.views import PostListView,like,dislike,PostDetailView
+from Post.views import PostListView,post_like,post_dislike,comment_like,comment_dislike,PostDetailView
 
 
 
@@ -13,8 +13,10 @@ urlpatterns = [
     path('checkEmailExistence', checkEmailExistence),
     path('checkUserNameExistence', checkUsernameExistence),
     # path('posts', PostListView.as_view()),
-    path('like',like),
-    path('dislike', dislike),
+    path('post/like',post_like),
+    path('post/dislike', post_dislike),
+    path('comment/like', comment_like),
+    path('comment/dislike', comment_dislike),
 
 ]
 # path('home', RoomView.as_view()),

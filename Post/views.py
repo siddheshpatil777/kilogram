@@ -40,7 +40,7 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
         query = self.get_queryset(post_id)
         if(len(query)==0):
             return JsonResponse({'success': False, 'error': 'PostId does not exist'}, status=status.HTTP_404_NOT_FOUND)
-        serializer = PostDetailSerializer(query[0],context={'userWhoAsked': request.user})
+        serializer = PostDetailSerializer(query[0],context={'user_who_asked': request.user})
         return Response(serializer.data)
     def post(self, request, *args, **kwargs):
 
@@ -50,7 +50,7 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
         # thePost=self.serializer_class(data=request.data)
         # thePost.is_valid()
         thePost=Post(title=data['title'],content=data['content'],author=request.user,image=data['image'])
-        x=self.serializer_class(thePost,context={'userWhoAsked': request.user})
+        x=self.serializer_class(thePost,context={'user_who_asked': request.user})
         # x.is_valid()
         print(x.data)
         # if():
@@ -61,7 +61,7 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
         # query = self.get_queryset(post_id)
         # if(len(query)==0):
         return JsonResponse({'success': False, 'error': 'PostId does not exist'}, status=status.HTTP_404_NOT_FOUND)
-        # serializer = PostDetailSerializer(query[0],context={'userWhoAsked': request.user})
+        # serializer = PostDetailSerializer(query[0],context={'user_who_asked': request.user})
         # return Response(serializer.data)
 
 
@@ -81,7 +81,7 @@ class PostListView(generics.ListCreateAPIView):
         # Note the use of `get_queryset()` instead of `self.queryset`
         queryset = self.get_queryset()
         print("request for post from", request.user)
-        serializer = PostDetailSerializer(queryset, many=True, context={'userWhoAsked': request.user})
+        serializer = PostDetailSerializer(queryset, many=True, context={'user_who_asked': request.user})
         # serializer = PostDetailSerializer(queryset, many=True)
 
         # PostDetailSerializer()
@@ -98,7 +98,7 @@ class PostListView(generics.ListCreateAPIView):
 #  return Response()
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
-def like(request):
+def post_like(request):
     print("got request for like")
     # data = request.data
     data = json.loads(request.body)
@@ -114,7 +114,7 @@ def like(request):
 
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
-def dislike(request):
+def post_dislike(request):
     print("got request for dislike")
     # print(request.data)
     # data = json.loads(request.body)
@@ -128,7 +128,36 @@ def dislike(request):
         # post.likers.add(request.user)
         return JsonResponse({'success': True}, status=status.HTTP_200_OK)
     return JsonResponse({'success': False, 'error': 'PostId does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def comment_like(request):
+    print("got request for comment like")
+    # data = request.data
+    data = json.loads(request.body)
+    comment_id = int(data['comment_id'])
+    print("comment id recieved ", comment_id)
+    query = Comment.objects.all().filter(pk=comment_id)
+    if (len(query) > 0):
+        comment = query.first()
+        comment.likers.add(request.user)
+        return JsonResponse({'success': True}, status=status.HTTP_200_OK)
+    return JsonResponse({'success': False, 'error': 'comment  does not exist'}, status=status.HTTP_400_BAD_REQUEST)
 
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def comment_dislike(request):
+    print("got request for comment like")
+    # data = request.data
+    data = json.loads(request.body)
+    comment_id = int(data['comment_id'])
+    print("comment id recieved ", comment_id)
+    query = Comment.objects.all().filter(pk=comment_id)
+    if (len(query) > 0):
+        comment = query.first()
+        comment.likers.remove(request.user)
+        return JsonResponse({'success': True}, status=status.HTTP_200_OK)
+    return JsonResponse({'success': False, 'error': 'comment does not exist'}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 # @authentication_classes([SessionAuthentication, BasicAuthentication])

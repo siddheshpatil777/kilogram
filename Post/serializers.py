@@ -22,8 +22,8 @@ class PostDetailSerializer(serializers.ModelSerializer):
         x=super().to_representation(instance)
         # print(self.context)
         # print(instance)
-        user=self.context['userWhoAsked']
-        x['isLiked'] = instance.likers.filter(pk=user.pk).exists()
+        user=self.context['user_who_asked']
+        x['is_liked'] = instance.likers.filter(pk=user.pk).exists()
         x['views']=len(x['views'])
         return x
 
@@ -33,16 +33,17 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ('id','content', 'date_posted', 'author', )
 
-
     def to_representation(self, instance):
-        ret = super().to_representation(instance)
-        ret['post_id'] =instance.post.id
+        x = super().to_representation(instance)
+        x['post_id'] =instance.post.id
         if(instance.parent):
-            ret['parent'] = instance.parent.id
+            x['parent'] = instance.parent.id
         else:
-            ret['parent'] = 0
-        ret['author_name'] = instance.author.username
-        return ret
+            x['parent'] = 0
+        x['author_name'] = instance.author.username
+        user = self.context['user_who_asked']
+        x['is_liked'] = instance.likers.filter(pk=user.pk).exists()
+        return x
 # class HighScoreSerializer(serializers.BaseSerializer):
 #
 #     def to_representation(self, instance):

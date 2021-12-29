@@ -1,3 +1,4 @@
+import React, {Component, useState} from 'react';
 import {Paper} from "@material-ui/core";
 import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
@@ -9,6 +10,9 @@ import {Link} from "react-router-dom";
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import Button from "@material-ui/core/Button";
+import timeDiffToString from "../utility/timeDiffToString";
+import myFetch from "../utility/myFetch";
+import {BASE_URL} from "../METADATA";
 
 const useStyles = makeStyles((theme) => ({
     userName: {
@@ -32,7 +36,32 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 const MyComment = ({data, mapForTcom, level}) => {
-    let isLiked = true;
+    const {id,content,date_posted,author,is_liked}=data;
+    const [isLiked,setIsLiked]=useState(is_liked);
+    const likeThisComment = () => {
+        myFetch(BASE_URL + "/api/comment/like","POST",{"comment_id": id})
+            .then(res=>{
+                if(res.ok){
+                    setIsLiked(true);
+                }
+            });
+    };
+    const dislikeThisComment = () => {
+        myFetch(BASE_URL + "/api/comment/dislike", "POST",{"comment_id": id}).then(res=>{
+                if(res.ok){
+                    setIsLiked(false);
+                }
+            });
+    };
+    const handleLikeButtonPressed = (e) => {
+        e.preventDefault();
+        if (isLiked === true) {
+            dislikeThisComment();
+        } else {
+            likeThisComment();
+        }
+    };
+    // let isLiked = true;
     const classes = useStyles();
     let spacing = "";
     if (level == 1) {
@@ -41,31 +70,7 @@ const MyComment = ({data, mapForTcom, level}) => {
     // console.log(data.date_posted);
     let today = Date.now();
     let commentDate = Date.parse(data.date_posted);
-    let elaspedTime = today - commentDate;
-    elaspedTime = elaspedTime / (1000.0 * 60.0);
-    let timeSinceCommentPosted = "";
-    if (elaspedTime < 1.0) {
-
-        timeSinceCommentPosted = "just now";
-    } else if (1.0 <= elaspedTime && elaspedTime < 60.0) {
-        elaspedTime = elaspedTime | 0;
-        timeSinceCommentPosted = elaspedTime + "minutes ago";
-    } else if (60.0 <= elaspedTime && elaspedTime < 1440.0) {
-        elaspedTime = elaspedTime / 60.0;
-        elaspedTime = elaspedTime | 0;
-        timeSinceCommentPosted = elaspedTime + "hours ago";
-    } else if (1440.0 <= elaspedTime && elaspedTime < 565110.0) {
-
-        elaspedTime = elaspedTime / 60.0;
-        elaspedTime = elaspedTime / 24.0;
-        elaspedTime = elaspedTime | 0;
-        timeSinceCommentPosted = elaspedTime + " days ago";
-    } else {
-        // elaspedTime=elaspedTime/60.0;
-        // elaspedTime=elaspedTime | 0;
-        timeSinceCommentPosted = "long time ago";
-    }
-
+    const timeSinceCommentPosted=timeDiffToString(today,commentDate);
 
     return (
         <div>
@@ -81,9 +86,10 @@ const MyComment = ({data, mapForTcom, level}) => {
                     </Typography>
                 </Grid>
                 <Grid item container xs={1}>
-                    {(isLiked === true) ?
+                    <div onClick={handleLikeButtonPressed}> {(isLiked === true) ?
                         <FavoriteIcon color="secondary" classes={classes.commentLiked} fontSize="small"/> :
-                        <FavoriteBorderIcon item fontSize="small"/>}
+                        <FavoriteBorderIcon item fontSize="small"/>}</div>
+
                 </Grid>
                 <Typography fontWeight="fontWeightSmall" item noWrap className={classes.timestamp}>
                     {spacing}{timeSinceCommentPosted}

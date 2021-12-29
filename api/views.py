@@ -41,12 +41,13 @@ class CommentListView(ListCreateAPIView):
         # data = json.loads(request.body)
         # post = data['post']
         # queryset = Comment.objects.all().filter(post=post)
-
+        # data = json.loads(request.body)
+        # post_id = int(data['user_who_asked'])
         post=Post.objects.all().filter(title="electron").first()
         post_id=post.id
         queryset = self.get_queryset().filter(post=post)
 
-        serializer = CommentSerializer(queryset, many=True)
+        serializer = CommentSerializer(queryset, many=True,context={'user_who_asked': request.user})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 #

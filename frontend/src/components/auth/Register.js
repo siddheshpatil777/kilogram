@@ -203,7 +203,6 @@ export default function Register() {
         if (prop === 'username') {
             const requestOptions = {
                 method: 'GET',
-
             }
             fetch(BASE_URL + "/api/checkUserNameExistence?username=" + value.toString(), requestOptions)
                 .then((res) => {
