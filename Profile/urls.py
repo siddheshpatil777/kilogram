@@ -9,7 +9,7 @@ urlpatterns = [
     path('login', LoginAPI.as_view()),
     path('logout', logoutFunc),
     path('user', UserAPI.as_view()),
-    path('posts', PostListView.as_view()),
+
 
     # path('login',loginFunc),
     # path('logout',logoutFunc),

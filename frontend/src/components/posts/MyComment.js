@@ -13,7 +13,7 @@ import Button from "@material-ui/core/Button";
 import timeDiffToString from "../utility/timeDiffToString";
 import myFetch from "../utility/myFetch";
 import {BASE_URL} from "../METADATA";
-
+import {COMMENT_DISLIKE_URL, COMMENT_LIKE_URL, urlMapper} from "../utility/urlMapper";
 const useStyles = makeStyles((theme) => ({
     userName: {
         fontWeight: "700",
@@ -39,7 +39,7 @@ const MyComment = ({data, mapForTcom, level}) => {
     const {id,content,date_posted,author,is_liked}=data;
     const [isLiked,setIsLiked]=useState(is_liked);
     const likeThisComment = () => {
-        myFetch(BASE_URL + "/api/comment/like","POST",{"comment_id": id})
+        myFetch(urlMapper(COMMENT_LIKE_URL),"POST",{"comment_id": id})
             .then(res=>{
                 if(res.ok){
                     setIsLiked(true);
@@ -47,7 +47,7 @@ const MyComment = ({data, mapForTcom, level}) => {
             });
     };
     const dislikeThisComment = () => {
-        myFetch(BASE_URL + "/api/comment/dislike", "POST",{"comment_id": id}).then(res=>{
+        myFetch(urlMapper(COMMENT_DISLIKE_URL), "POST",{"comment_id": id}).then(res=>{
                 if(res.ok){
                     setIsLiked(false);
                 }

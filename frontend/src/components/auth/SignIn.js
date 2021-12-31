@@ -14,8 +14,6 @@ import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Cookies from 'universal-cookie';
-
-
 import {Snackbar} from "@material-ui/core";
 // import DjangoCSRFToken from 'django-react-csrftoken'
 import CSRFToken from '../utility/csrftoken';
@@ -25,7 +23,7 @@ import {BASE_URL} from "../METADATA";
 import delay from "../utility/utility";
 import {Alert} from "@material-ui/lab";
 import Register from "./Register";
-
+import {urlMapper,LOGIN_URL} from "../utility/urlMapper";
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
@@ -91,7 +89,8 @@ const SignIn = (props) => {
 
         }
         // console.log(requestOptions);
-        fetch(BASE_URL + "/api/auth/login", requestOptions)
+        // BASE_URL + "/api/auth/login"
+        fetch(urlMapper(LOGIN_URL), requestOptions)
             .then((response) => {
                 console.log("got login response");
                 if (!response.ok) {

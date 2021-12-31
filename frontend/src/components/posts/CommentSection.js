@@ -3,9 +3,10 @@ import React, { Component }  from 'react';
 import useFetch from "../utility/useFetch";
 import {BASE_URL} from "../METADATA";
 import MyComment from "./MyComment";
+import {urlMapper,COMMENT_SECTION_URL} from "../utility/urlMapper";
 
 const CommentSection = () => {
-    const {data, isPending, error} = useFetch(BASE_URL + '/api/commentSection');
+    const {data, isPending, error} = useFetch(urlMapper(COMMENT_SECTION_URL));
     if (isPending) {
         return <h3>loading</h3>;
     }

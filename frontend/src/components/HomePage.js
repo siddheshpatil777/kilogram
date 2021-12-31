@@ -11,7 +11,7 @@ import {makeStyles} from '@material-ui/core/styles';
 import {isEmpty} from './utility/utility';
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 import Cookies from "universal-cookie";
-
+import {POSTS_URL, urlMapper} from "./utility/urlMapper";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -28,7 +28,8 @@ const HomePage = () => {
     // const classes = useStyles();
     // const [data, isPending, isError] = useFetch('/api/currentInfo');
     // this.context.setState({username: data.username});
-    const {data, isPending, error} = useFetch(BASE_URL + '/api/auth/posts');
+// BASE_URL + '/api/auth/posts'
+    const {data, isPending, error} = useFetch(urlMapper(POSTS_URL));
     // myFetch
     // const allPosts =
     // console.log(data);
@@ -53,6 +54,7 @@ const HomePage = () => {
     //
     // });
     return (
+
         <div margin="normal">
             <Grid
                 container

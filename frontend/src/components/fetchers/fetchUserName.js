@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
 import {BASE_URL} from "../METADATA";
 import CSRFToken from "../utility/csrftoken";
+import {CURRENT_INFO_URL, urlMapper} from "../utility/urlMapper";
 
 
 const fetchUserName = () => {
-    return fetch(BASE_URL+"/api/currentInfo", {
+    return fetch(urlMapper(CURRENT_INFO_URL), {
         method: "GET",
         headers: {
             "Accept": "application/json",

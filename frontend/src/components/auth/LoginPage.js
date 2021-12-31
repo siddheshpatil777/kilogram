@@ -7,6 +7,7 @@ import {UserDataContext} from "../../contexts/UserDataContext";
 import {BASE_URL} from "../METADATA";
 import delay from "../utility/utility";
 import {Alert} from "@material-ui/lab";
+import {urlMapper,LOGIN_URL} from "../utility/urlMapper";
 
 const LoginPage = (props) => {
     const handleClose = (event, reason) => {
@@ -43,7 +44,9 @@ const LoginPage = (props) => {
              credentials: 'include',
         }
         // console.log(requestOptions);
-        fetch(BASE_URL + "/auth/login", requestOptions)
+        // BASE_URL + "/auth/login"
+
+        fetch(urlMapper(LOGIN_URL), requestOptions)
             .then((response) => {
                 if (!response.ok) {
                     console.log("error");

@@ -21,6 +21,7 @@ import {BASE_URL} from "../METADATA"
 import useFetch from "../utility/useFetch";
 import CSRFToken from "../utility/csrftoken";
 import myFetch from "../utility/myFetch";
+import {POST_DISLIKE_URL, POST_LIKE_URL, urlMapper} from "../utility/urlMapper";
 const useStyles = makeStyles((theme) => ({
     root: {
         maxWidth: 1345,
@@ -57,7 +58,7 @@ export default function PostCard({data}) {
         setExpanded(!expanded);
     };
     const likeThisPost = () => {
-        myFetch(BASE_URL + "/api/post/like","POST",{"post_id": id})
+        myFetch(urlMapper(POST_LIKE_URL),"POST",{"post_id": id})
             .then(res=>{
                 if(res.ok){
                     setIsLiked(true);
@@ -65,7 +66,7 @@ export default function PostCard({data}) {
             });
     };
     const dislikeThisPost = () => {
-        myFetch(BASE_URL + "/api/post/dislike", "POST",{"post_id": id}).then(res=>{
+        myFetch(urlMapper(POST_DISLIKE_URL), "POST",{"post_id": id}).then(res=>{
                 if(res.ok){
                     setIsLiked(false);
                 }

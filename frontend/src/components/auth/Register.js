@@ -30,6 +30,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Link from "@material-ui/core/Link";
 import Box from "@material-ui/core/Box";
 import Container from "@material-ui/core/Container";
+import {urlMapper,EMAIL_EXISTENCE_URL, REGISTER_URL, USERNAME_EXISTENCE_URL} from "../utility/urlMapper";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -174,7 +175,8 @@ export default function Register() {
             body: JSON.stringify(registerData),
         }
         // console.log(requestOptions);
-        fetch(BASE_URL + "/api/auth/register", requestOptions)
+
+        fetch(urlMapper(REGISTER_URL), requestOptions)
             .then((response) => {
                 if (!response.ok) {
                     console.log("error");
@@ -185,7 +187,6 @@ export default function Register() {
             }).then((data) => {
             console.log(data);
             if (data) {
-
                 setSnackBar({severity: "success", message: "account created successfully"});
                 setTimeout(() => {
                     history.push('/login');
@@ -204,7 +205,7 @@ export default function Register() {
             const requestOptions = {
                 method: 'GET',
             }
-            fetch(BASE_URL + "/api/checkUserNameExistence?username=" + value.toString(), requestOptions)
+            fetch(urlMapper(USERNAME_EXISTENCE_URL)+"?username=" + value.toString(), requestOptions)
                 .then((res) => {
                     console.log(res);
                     return res.json();
@@ -222,7 +223,7 @@ export default function Register() {
             const requestOptions = {
                 method: 'GET',
             }
-            fetch(BASE_URL + "/api/checkEmailExistence?email=" + value.toString(), requestOptions)
+            fetch(urlMapper(EMAIL_EXISTENCE_URL) + "?email=" + value.toString(), requestOptions)
                 .then((res) => {
                     console.log(res);
                     return res.json();

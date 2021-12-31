@@ -5,6 +5,7 @@ import CSRFToken from "../components/utility/csrftoken";
 import Cookies from 'universal-cookie';
 import {useHistory} from "react-router-dom";
 import { withRouter } from "react-router-dom";
+import {urlMapper,USER_URL} from '../components/utility/urlMapper';
 export const UserDataContext = React.createContext({
     username: "sisdd",
     theme: 'dark',
@@ -42,7 +43,8 @@ class UserDataContextProvider extends Component {
         const cookies = new Cookies();
         let token=cookies.get('token');
         console.log(token);
-        fetch(BASE_URL + "/api/auth/user", {
+
+        fetch(urlMapper(USER_URL) , {
             method: "GET",
             headers: {
                 "Authorization":"Token "+token,

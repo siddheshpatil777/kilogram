@@ -7,6 +7,7 @@ from Post.views import PostListView,post_like,post_dislike,comment_like,comment_
 
 
 urlpatterns = [
+    path('posts', PostListView.as_view()),
     path('post', PostDetailView.as_view()),
     path('currentInfo', getMyInfo),
     path('commentSection', CommentListView.as_view()),
