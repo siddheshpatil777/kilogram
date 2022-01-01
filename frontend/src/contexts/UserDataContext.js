@@ -39,19 +39,22 @@ class UserDataContextProvider extends Component {
         // this.setState({
         //     username:  fetchUserName(),
         // });
+        this.setState({
+            updateUserName: this.updateUserName,
+            setUserName: this.setUserName,
+             updateToken: this.updateToken,
+        });
         console.log("sadja");
         const cookies = new Cookies();
         let token=cookies.get('token');
-        console.log(token);
-
+        console.log("using the token from cookie "+token);
+        console.log("accessing url"+urlMapper(USER_URL))
         fetch(urlMapper(USER_URL) , {
             method: "GET",
             headers: {
                 "Authorization":"Token "+token,
                 "Accept": "application/json",
-
             },
-
         }).then((response) => {
             if (response.ok) {
                 return response.json();
@@ -61,15 +64,12 @@ class UserDataContextProvider extends Component {
             return {username: null,};
         }).then((data) => {
             console.log("fetcting userName data=",data);
+            // cookies.save()
             this.setState({
                 username: data.username,
             });
         });
-        this.setState({
-            updateUserName: this.updateUserName,
-            setUserName: this.setUserName,
-             updateToken: this.updateToken,
-        });
+
     }
 
     async updateUserName() {

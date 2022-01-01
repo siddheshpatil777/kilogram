@@ -10,8 +10,8 @@ export const COMMENT_SECTION_URL=8;
 export const COMMENT_LIKE_URL=9;
 export const COMMENT_DISLIKE_URL=10;
 export const POST_LIKE_URL=11;
-export const POST_DISLIKE_URL=11;
-export const USER_URL=11;
+export const POST_DISLIKE_URL=12;
+export const USER_URL=13;
 
 
 

@@ -9,4 +9,7 @@ class Profile(models.Model):
         primary_key=True,
     )
     bio=models.CharField(max_length=80)
+    follwings=models.ManyToManyField('self',null=True,related_name='follwings')
+    followers = models.ManyToManyField('self', null=True, related_name='followers')
+
 

@@ -15,6 +15,8 @@ from rest_framework.decorators import api_view, authentication_classes, permissi
 from Post.serializers import PostDetailSerializer
 
 from .models import Post
+
+
 # class PostListView(ListCreateAPIView):
 #     serializer_class =PostDetailSerializer
 
@@ -32,25 +34,28 @@ class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
     ]
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
-    def get_queryset(self,id):
+
+    def get_queryset(self, id):
         return Post.objects.all().filter(id=id)
+
     def get(self, request, *args, **kwargs):
         data = json.loads(request.body)
-        post_id=data['post_id']
+        post_id = data['post_id']
         query = self.get_queryset(post_id)
-        if(len(query)==0):
+        if (len(query) == 0):
             return JsonResponse({'success': False, 'error': 'PostId does not exist'}, status=status.HTTP_404_NOT_FOUND)
-        serializer = PostDetailSerializer(query[0],context={'user_who_asked': request.user})
-        return Response(serializer.data)
-    def post(self, request, *args, **kwargs):
+        serializer = PostDetailSerializer(query[0], context={'user_who_asked': request.user})
 
+        return Response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
         # request.data['author']=request.user
         # print(request.data)
-        data=request.data
+        data = request.data
         # thePost=self.serializer_class(data=request.data)
         # thePost.is_valid()
-        thePost=Post(title=data['title'],content=data['content'],author=request.user,image=data['image'])
-        x=self.serializer_class(thePost,context={'user_who_asked': request.user})
+        thePost = Post(title=data['title'], content=data['content'], author=request.user, image=data['image'])
+        x = self.serializer_class(thePost, context={'user_who_asked': request.user})
         # x.is_valid()
         print(x.data)
         # if():
@@ -72,11 +77,19 @@ class PostListView(generics.ListCreateAPIView):
     # authentication_classes = [TokenAuthentication]
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
+
     # def get_object(self):
     #     return self.request.user
     def get_queryset(self):
+        # _representation(self, instance):
+        # x = super().to_representation(instance)
+        # user = self.context['user_who_asked']
+        # x['is_liked'] = instance.likers.filter(pk=user.pk).exists()
+        # x['views'] = len(x['views'])
+        # return x
         return Post.objects.all()
-            # .filter(author=self.request.user)
+        # .filter(author=self.request.user)
+
     def list(self, request):
         # Note the use of `get_queryset()` instead of `self.queryset`
         queryset = self.get_queryset()
@@ -128,6 +141,8 @@ def post_dislike(request):
         # post.likers.add(request.user)
         return JsonResponse({'success': True}, status=status.HTTP_200_OK)
     return JsonResponse({'success': False, 'error': 'PostId does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+
+
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def comment_like(request):
@@ -158,6 +173,7 @@ def comment_dislike(request):
         comment.likers.remove(request.user)
         return JsonResponse({'success': True}, status=status.HTTP_200_OK)
     return JsonResponse({'success': False, 'error': 'comment does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['POST'])
 # @authentication_classes([SessionAuthentication, BasicAuthentication])

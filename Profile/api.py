@@ -35,5 +35,6 @@ class UserAPI(generics.RetrieveAPIView,ObtainAuthToken):
     ]
     serializer_class = UserSerializer
     def get_object(self):
+        print("USER API accessed by "+str(self.request.user))
         return self.request.user
 

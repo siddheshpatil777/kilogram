@@ -19,12 +19,14 @@ import Profiles from "./profile/Profiles";
 import ProfilePage from "./profile/ProfilePage";
 // const UserDataContext=React.createContext({username:null});
 // const useStyles =
-
+//
 export default class App extends Component {
     constructor(props) {
         super(props);
     }
+    componentWillMount() {
 
+    }
     render() {
         const classes = makeStyles((theme) => ({
             App: {

@@ -8,7 +8,7 @@ import {BASE_URL} from "../METADATA";
 import delay from "../utility/utility";
 import {Alert} from "@material-ui/lab";
 import {urlMapper,LOGIN_URL} from "../utility/urlMapper";
-
+import Cookies from 'universal-cookie';
 const LoginPage = (props) => {
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -58,6 +58,9 @@ const LoginPage = (props) => {
             }).then((data) => {
             if (data) {
                 if (data.success === true) {
+                    const cookies=new Cookies();
+                    cookies.set('token',data.token);
+                    cookies.set('logged_in_username',data.user.username);
                     history.push('/');
                 } else {
                     setSnackBar({severity: "error", message: data.message});

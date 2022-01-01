@@ -18,7 +18,6 @@ urlpatterns = [
     path('post/dislike', post_dislike),
     path('comment/like', comment_like),
     path('comment/dislike', comment_dislike),
-
 ]
 # path('home', RoomView.as_view()),
 # path('create-room', CreateRoomView.as_view()),
