@@ -1,4 +1,4 @@
-import React, { Component }  from 'react';
+import React, {Component} from 'react';
 import {useState, useEffect, useContext} from 'react';
 import CSRFToken from "./csrftoken";
 import {UserDataContext} from "../../contexts/UserDataContext";
@@ -75,12 +75,12 @@ const useFetch = (url) => {
 
     useEffect(() => {
         const abortCont = new window.AbortController();
-            // new AbortController();
-  let options = {
-        method: 'GET',
-        signal: abortCont.signal,
-        headers: myHeaders
-    };
+        // new AbortController();
+        let options = {
+            method: 'GET',
+            signal: abortCont.signal,
+            headers: myHeaders,
+        };
         setLoading('loading...')
         setData(null);
         setError(null);
@@ -95,10 +95,10 @@ const useFetch = (url) => {
                 // res.content && setData(res.content);
                 return res.json();
             }).then(data => {
-                if(data){
-                    setData(data);
-                    console.log(data);
-                }
+            if (data) {
+                setData(data);
+                console.log(data);
+            }
         })
             .catch(err => {
                 setLoading(false)

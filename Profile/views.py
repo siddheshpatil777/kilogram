@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 import re
 from .models import Profile
-from .serializers import LoginUserSerializer
+from .serializers import LoginUserSerializer, ProfileDetailSerializer
 import json
 from django.core.validators import validate_email
 
@@ -138,7 +138,6 @@ def loginFunc(request):
 
 class LoginUserView(APIView):
     serializer_class = LoginUserSerializer
-
     def post(self, request, format=None):
         # if not self.request.session.exists(self.request.session.session_key):
         #     self.request.session.create()
@@ -165,6 +164,54 @@ class LoginUserView(APIView):
             print('Access Denied')
 
             return JsonResponse({'Bad request': 'Access Denied'}, status=status.HTTP_403_FORBIDDEN)
+class ProfileDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [
+        permissions.IsAuthenticated
+    ]
+    queryset = Profile.objects.all()
+    serializer_class = ProfileDetailSerializer
+
+    def get_queryset(self,username):
+        user=User.objects.get(username=username)
+        print(" user from query " +str(user))
+        return Profile.getProfileFromUser(user=user)
+
+    def get(self, request,username):
+        # username = request.GET['username']
+        # print("request to access profile of " )
+        # print(username)
+        print("request to access profile of "+str(username))
+        # print( Profile.objects.filter(user=request.user))
+        user=User.objects.get(username=username)
+        profile = Profile.objects.get(user=user)
+        if profile is None:
+            return JsonResponse({'success': False, 'error': 'PostId does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = ProfileDetailSerializer(profile)
+
+        return Response(serializer.data)
+
+    # def post(self, request, *args, **kwargs):
+    #     # request.data['author']=request.user
+    #     # print(request.data)
+    #     data = request.data
+    #     # thePost=self.serializer_class(data=request.data)
+    #     # thePost.is_valid()
+    #     thePost = Post(title=data['title'], content=data['content'], author=request.user, image=data['image'])
+    #     x = self.serializer_class(thePost, context={'user_who_asked': request.user})
+    #     # x.is_valid()
+    #     print(x.data)
+    #     # if():
+    #     #     print("got correct data")
+    #     # thePost.
+    #     # data = json.loads(request.body)
+    #     # post_id=data['post_id']
+    #     # query = self.get_queryset(post_id)
+    #     # if(len(query)==0):
+    #     return JsonResponse({'success': False, 'error': 'PostId does not exist'}, status=status.HTTP_404_NOT_FOUND)
+    #     # serializer = PostDetailSerializer(query[0],context={'user_who_asked': request.user})
+    #     # return Response(serializer.data)
+    #
+
 # Create your views here.
 # def main(request):
 #     return HttpResponse("Hello")

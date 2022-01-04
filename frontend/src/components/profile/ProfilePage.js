@@ -1,26 +1,63 @@
 import React, {useContext, useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
-import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
-import Collapse from '@material-ui/core/Collapse';
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import {red} from '@material-ui/core/colors';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-
-import {BASE_URL} from "../METADATA"
 import {useParams} from "react-router-dom";
 import {UserDataContext} from "../../contexts/UserDataContext";
-import {Button, CardActionArea, Grid, Paper} from "@material-ui/core";
+import {Button, CardActionArea, Grid} from "@material-ui/core";
 import kaguya from "../../images/kaguya.png";
+import useFetch from "../utility/useFetch";
+import {PROFILE_URL, urlMapper} from "../utility/urlMapper";
+
+import PropTypes from 'prop-types';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Box from '@material-ui/core/Box';
+
+function TabPanel(props) {
+    const {children, value, index, ...other} = props;
+
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`full-width-tabpanel-${index}`}
+            aria-labelledby={`full-width-tab-${index}`}
+            {...other}
+        >
+            {value === index && (
+                <Box p={3}>
+                    <Typography>{children}</Typography>
+                </Box>
+            )}
+        </div>
+    );
+}
+
+TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
+};
+
+function a11yProps(index) {
+    return {
+        id: `full-width-tab-${index}`,
+        'aria-controls': `full-width-tabpanel-${index}`,
+    };
+}
+
+// const useStyles_tabs = makeStyles((theme) => ({
+//   root: {
+//     backgroundColor: theme.palette.background.paper,
+//     width: 500,
+//   },
+// }));
 
 const useStyles = makeStyles((theme) => ({
 
@@ -34,6 +71,7 @@ const useStyles = makeStyles((theme) => ({
     },
     root: {
         maxWidth: "auto",
+        minWidth: "60vw",
     },
     media: {
         height: 140,
@@ -47,63 +85,41 @@ const useStyles = makeStyles((theme) => ({
         // translateY: '-50%'
     },
     titleOnCard: {
-        position:"relative",
+        position: "relative",
         zIndex: 3,
-        left:0,
-        bottom:0,
+        left: 0,
+        bottom: 0,
         // marginLeft:"70",
         // transform:"translate(12,12) !important"
     },
 }));
 const ProfilePage = () => {
+
+
+    const [value, setValue] = useState(0);
+
+    const handleChange = (event, newValue) => {
+        event.preventDefault();
+        setValue(newValue);
+    };
+
+    const handleChangeIndex = (index) => {
+        setValue(index);
+    };
     const params = useParams();
     const pageUsername = params.username;
-    const {username} = useContext(UserDataContext);
+    console.log("pageUsername " + pageUsername)
+    const {currrent_username} = useContext(UserDataContext);
     const classes = useStyles();
-    const isItMyPage = (pageUsername === username);
-
+    const isItMyPage = (pageUsername === currrent_username);
     console.log("params");
     // console.log(pageUsername);
     console.log(isItMyPage);
+    console.log(useFetch(urlMapper(PROFILE_URL) + "/" + pageUsername));
+    const {data, isPending, error} = useFetch(urlMapper(PROFILE_URL) + "/" + pageUsername);
+    // const{location,birth_date,verified,location,bio,username,followings_count}=data;
 
     return (
-        // <Grid
-        //     container
-        //     direction="row"
-        //     justifyContent="center"
-        //     alignItems="flex-start"
-        // >
-        //  <Grid container item xs={6} spacing={3}>>
-        //      <Paper>dadsadasdasd</Paper>
-        //  </Grid>
-        //
-        // </Grid>
-        // <div className={classes.root}>
-        //     <Grid container spacing={3} justifyContent="center">
-        //         {/*<Grid item xs={12}>*/}
-        //         {/*  <Paper className={classes.paper}>xs=12</Paper>*/}
-        //         {/*</Grid>*/}
-        //         <Grid item xs={6}>
-        //             <Paper className={classes.paper}>xs=6</Paper>
-        //         </Grid>
-        //         {/*<Grid item xs={6}>*/}
-        //         {/*  <Paper className={classes.paper}>xs=6</Paper>*/}
-        //         {/*</Grid>*/}
-        //         {/*<Grid item xs={3}>*/}
-        //         {/*  <Paper className={classes.paper}>xs=3</Paper>*/}
-        //         {/*</Grid>*/}
-        //         {/*<Grid item xs={3}>*/}
-        //         {/*  <Paper className={classes.paper}>xs=3</Paper>*/}
-        //         {/*</Grid>*/}
-        //         {/*<Grid item xs={3}>*/}
-        //         {/*  <Paper className={classes.paper}>xs=3</Paper>*/}
-        //         {/*</Grid>*/}
-        //         {/*<Grid item xs={3}>*/}
-        //         {/*  <Paper className={classes.paper}>xs=3</Paper>*/}
-        //         {/*</Grid>*/}
-        //     </Grid>
-        // </div>
-
 
         <Grid
             container
@@ -114,68 +130,92 @@ const ProfilePage = () => {
         >
             <Grid item xs={8} className={classes.temp}>
                 <Card className={classes.root}>
-                    <CardActionArea>
-                        <CardMedia
-                            className={classes.media}
-                            image={kaguya}
-                            title="Contemplative Reptile"
-                        />
-                        <CardContent>
-                            <Card className={classes.profilePicCard}>
-                                <CardActionArea>
 
-                                    <CardMedia
-                                        className={classes.media}
-                                        image={kaguya}
-                                    >
+                    <CardMedia
+                        className={classes.media}
+                        image={kaguya}
+                        title="Contemplative Reptile"
+                    />
+                    <CardContent>
+                        <Card className={classes.profilePicCard}>
+                            <CardActionArea>
 
-                                        {/*<Grid*/}
-                                        {/*    container*/}
-                                        {/*    direction="column-reverse"*/}
-                                        {/*    justifyContent="flex-start"*/}
-                                        {/*    alignItems="flex-start"*/}
+                                <CardMedia
+                                    className={classes.media}
+                                    image={kaguya}
+                                >
 
-                                        {/*>*/}
-                                        {/*    <Typography item variant="h5" component="h2"*/}
-                                        {/*                  className={classes.titleOnCard}>*/}
-                                        {/*        Lizard*/}
-                                        {/*    </Typography>*/}
-                                        {/*    <Typography item variant="h5" component="h2"*/}
-                                        {/*                  className={classes.titleOnCard}>*/}
-                                        {/*        Lizard 2*/}
-                                        {/*    </Typography>*/}
+                                    {/*<Grid*/}
+                                    {/*    container*/}
+                                    {/*    direction="column-reverse"*/}
+                                    {/*    justifyContent="flex-start"*/}
+                                    {/*    alignItems="flex-start"*/}
 
-                                        {/*</Grid>*/}
-                                        <CardHeader>sfsdffsdfsf</CardHeader>
-                                        <CardHeader>sfsdffsdfsf</CardHeader>
-                                        <CardHeader>sfsdffsdfsf</CardHeader>
+                                    {/*>*/}
+                                    {/*    <Typography item variant="h5" component="h2"*/}
+                                    {/*                  className={classes.titleOnCard}>*/}
+                                    {/*        Lizard*/}
+                                    {/*    </Typography>*/}
+                                    {/*    <Typography item variant="h5" component="h2"*/}
+                                    {/*                  className={classes.titleOnCard}>*/}
+                                    {/*        Lizard 2*/}
+                                    {/*    </Typography>*/}
 
-                                              <Typography item variant="h5" component="h2"
-                                                          className={classes.titleOnCard}>
-                                                Lizard
-                                            </Typography>
+                                    {/*</Grid>*/}
+                                    <CardHeader>sfsdffsdfsf</CardHeader>
+                                    <CardHeader>sfsdffsdfsf</CardHeader>
+                                    <CardHeader>sfsdffsdfsf</CardHeader>
+
+                                    <Typography item variant="h5" component="h2"
+                                                className={classes.titleOnCard}>
+                                        {data && data.username}
+                                    </Typography>
 
 
-                                    </CardMedia>
+                                </CardMedia>
 
-                                </CardActionArea>
+                            </CardActionArea>
 
-                            </Card>
-                            <Typography gutterBottom variant="h5" component="h2">
-                                Lizard
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary" component="p">
-                                Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-                                across all continents except Antarctica
-                            </Typography>
-                        </CardContent>
-                    </CardActionArea>
+                        </Card>
+                        <Typography gutterBottom variant="h5" component="h2">
+                            {data && data.username}
+                        </Typography>
+                        <Typography variant="body2" color="textSecondary" component="p">
+                            {data && data.bio}
+                        </Typography>
+                        <AppBar position="static" color="default">
+                            <Tabs
+                                value={value}
+                                onChange={handleChange}
+                                indicatorColor="primary"
+                                textColor="primary"
+                                variant="fullWidth"
+                                aria-label="full width tabs example"
+                            >
+                                <Tab label="Item One" {...a11yProps(0)} />
+                                <Tab label="Item Two" {...a11yProps(1)} />
+                                <Tab label="Item Three" {...a11yProps(2)} />
+                            </Tabs>
+                        </AppBar>
+
+                        <TabPanel value={value} index={0}>
+                            Item One
+                        </TabPanel>
+                        <TabPanel value={value} index={1}>
+                            Item Two
+                        </TabPanel>
+                        <TabPanel value={value} index={2}>
+                            Item Three
+                        </TabPanel>
+
+                    </CardContent>
+
                     <CardActions>
                         <Button size="small" color="primary">
-                            Share
+                            Sharea
                         </Button>
                         <Button size="small" color="primary">
-                            Learn More
+                            Learn MoreVer
                         </Button>
                     </CardActions>
                 </Card>
