@@ -1,12 +1,14 @@
-import React, { Component }  from 'react';
+import React, {Component} from 'react';
 
 import useFetch from "../utility/useFetch";
 import {BASE_URL} from "../METADATA";
 import MyComment from "./MyComment";
-import {urlMapper,COMMENT_SECTION_URL} from "../utility/urlMapper";
+import {urlMapper, COMMENT_SECTION_URL} from "../utility/urlMapper";
 
-const CommentSection = () => {
-    const {data, isPending, error} = useFetch(urlMapper(COMMENT_SECTION_URL));
+const CommentSection = ({post_id}) => {
+    console.log("search for post id " + post_id);
+    const {data, isPending, error} = useFetch(urlMapper(COMMENT_SECTION_URL) + "/" + post_id);
+
     if (isPending) {
         return <h3>loading</h3>;
     }
@@ -14,6 +16,8 @@ const CommentSection = () => {
         return <h3>There was Error</h3>
     }
     if (data) {
+        console.log("data recieved from coment section");
+        console.log(data);
         data.sort((a, b) => {
             let a_date = new Date(a.date_posted);
             let b_date = new Date(b.date_posted);
@@ -40,22 +44,26 @@ const CommentSection = () => {
         // console.log(data);
         // console.log(map);
         const mainComments = map.get(0);
-        return (
-            mainComments.map((comment) => {
-                return (
-                    <div>
-                        <MyComment key={comment.id} data={comment} mapForTcom={map} level={0}/>
-                    </div>
-                )
-            })
-            // <h3>sdfds</h3>
-        );
+        console.log("mainComments =");
+        console.log(mainComments);
+        if (mainComments) {
+            return (
+                mainComments.map((comment) => {
+                    return (
+                        <div>
+                            <MyComment key={comment.id} data={comment} mapForTcom={map} level={0}/>
+                        </div>
+                    )
+                })
+
+            );
+        }
 
     }
-     return (
+    return (
 
-            <h3>sdfds</h3>
-        );
+         <h3>be the first to post comment</h3>
+    );
 
 }
 export default CommentSection;

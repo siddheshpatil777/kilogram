@@ -35,7 +35,7 @@ class CommentListView(ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = CommentSerializer
     queryset=Comment.objects.all()
-    def list(self, request):
+    def list(self, request,post_id):
 
         # Note the use of `get_queryset()` instead of `self.queryset`
         # data = json.loads(request.body)
@@ -43,8 +43,8 @@ class CommentListView(ListCreateAPIView):
         # queryset = Comment.objects.all().filter(post=post)
         # data = json.loads(request.body)
         # post_id = int(data['user_who_asked'])
-        post=Post.objects.all().filter(title="electron").first()
-        post_id=post.id
+
+        post=Post.objects.all().get(id=post_id)
         queryset = self.get_queryset().filter(post=post)
 
         serializer = CommentSerializer(queryset, many=True,context={'user_who_asked': request.user})

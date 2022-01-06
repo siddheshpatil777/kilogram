@@ -11,7 +11,7 @@ urlpatterns = [
     path('post', PostDetailView.as_view()),
     path('profile/<username>', ProfileDetailView.as_view()),
     path('currentInfo', getMyInfo),
-    path('commentSection', CommentListView.as_view()),
+    path('commentSection/<post_id>', CommentListView.as_view()),
     path('checkEmailExistence', checkEmailExistence),
     path('checkUserNameExistence', checkUsernameExistence),
     # path('posts', PostListView.as_view()),

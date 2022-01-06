@@ -177,36 +177,39 @@ const ProfilePage = () => {
                             </CardActionArea>
 
                         </Card>
+
                         <Typography gutterBottom variant="h5" component="h2">
                             {data && data.username}
                         </Typography>
                         <Typography variant="body2" color="textSecondary" component="p">
                             {data && data.bio}
                         </Typography>
-                        <AppBar position="static" color="default">
-                            <Tabs
-                                value={value}
-                                onChange={handleChange}
-                                indicatorColor="primary"
-                                textColor="primary"
-                                variant="fullWidth"
-                                aria-label="full width tabs example"
-                            >
-                                <Tab label="Item One" {...a11yProps(0)} />
-                                <Tab label="Item Two" {...a11yProps(1)} />
-                                <Tab label="Item Three" {...a11yProps(2)} />
-                            </Tabs>
-                        </AppBar>
+                        <div>
+                            <AppBar position="static" color="default">
+                                <Tabs
+                                    value={value}
+                                    onChange={handleChange}
+                                    indicatorColor="primary"
+                                    textColor="primary"
+                                    variant="fullWidth"
+                                    aria-label="full width tabs example"
+                                >
+                                    <Tab label="Item One" {...a11yProps(0)} />
+                                    <Tab label="Item Two" {...a11yProps(1)} />
+                                    <Tab label="Item Three" {...a11yProps(2)} />
+                                </Tabs>
+                            </AppBar>
 
-                        <TabPanel value={value} index={0}>
-                            Item One
-                        </TabPanel>
-                        <TabPanel value={value} index={1}>
-                            Item Two
-                        </TabPanel>
-                        <TabPanel value={value} index={2}>
-                            Item Three
-                        </TabPanel>
+                            <TabPanel value={value} index={0}>
+                                Item One
+                            </TabPanel>
+                            <TabPanel value={value} index={1}>
+                                Item Two
+                            </TabPanel>
+                            <TabPanel value={value} index={2}>
+                                Item Three
+                            </TabPanel>
+                        </div>
 
                     </CardContent>
 

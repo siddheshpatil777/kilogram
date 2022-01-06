@@ -136,7 +136,7 @@ export default function PostCard({data}) {
                         {content}
 
                     </Typography>
-                    <CommentSection/>
+                    <CommentSection post_id={id}/>
 
                 </CardContent>
             </Collapse>

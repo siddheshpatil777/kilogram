@@ -12,6 +12,7 @@ import {isEmpty} from './utility/utility';
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 import Cookies from "universal-cookie";
 import {POSTS_URL, urlMapper} from "./utility/urlMapper";
+
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -54,32 +55,38 @@ const HomePage = () => {
     //
     // });
     return (
-
-        <div margin="normal">
+        <Grid
+            container
+            direction="column"
+            justifyContent="space-around"
+            alignItems="center"
+        >
             <Grid
                 container
-                spacing={1}
+                xs={4}
+                spacing={2}
                 margin="normal"
-                // justify="flex-around"
+                item
             >
 
                 {
                     data && data.map(function (postCard) {
-                    // console.log("post card data =");
-                    // console.log(postCard);
-                    return (
-                        <Grid
-                            item xs={3}
-                            sm={3}
-                            key={postCard.id}
-                            margin="normal"
-                        >
-                            <PostCard data={postCard}/>
-                        </Grid>
-                    )
-                })}
+                        // console.log("post card data =");
+                        // console.log(postCard);
+                        return (
+                            <Grid
+                                item
+                                xs={12}
+                                key={postCard.id}
+                                margin="normal"
+                            >
+                                <PostCard data={postCard}/>
+                            </Grid>
+                        )
+                    })}
             </Grid>
-        </div>
+        </Grid>
+
 
     );
 
