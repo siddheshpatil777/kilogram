@@ -17,6 +17,8 @@ import {makeStyles} from "@material-ui/core/styles";
 import clsx from "clsx";
 import Profiles from "./profile/Profiles";
 import ProfilePage from "./profile/ProfilePage";
+import PostCreateForm from "./posts/PostCreateForm";
+
 // const UserDataContext=React.createContext({username:null});
 // const useStyles =
 //
@@ -40,6 +42,9 @@ export default class App extends Component {
                 <UserDataContextProvider>
                     <Navbar/>
                     <Switch>
+                        <Route  path="/post/create" >
+                           <PostCreateForm/>
+                        </Route>
                         <Route  path="/profile/:username" >
                            <ProfilePage/>
                         </Route>
