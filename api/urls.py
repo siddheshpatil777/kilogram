@@ -7,8 +7,10 @@ from Post.views import PostListView,post_like,post_dislike,comment_like,comment_
 
 
 urlpatterns = [
-    path('posts', PostListView.as_view()),
+    path('post/<post_id>', PostDetailView.as_view()),
     path('post', PostDetailView.as_view()),
+    path('posts', PostListView.as_view()),
+    # path('post/create', PostCreateView.as_view()),
     path('profile/<username>', ProfileDetailView.as_view()),
     path('currentInfo', getMyInfo),
     path('commentSection/<post_id>', CommentListView.as_view()),
@@ -19,6 +21,8 @@ urlpatterns = [
     path('post/dislike', post_dislike),
     path('comment/like', comment_like),
     path('comment/dislike', comment_dislike),
+    path('comment/dislike', comment_dislike),
+
 ]
 # path('home', RoomView.as_view()),
 # path('create-room', CreateRoomView.as_view()),

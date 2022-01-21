@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PostCard({data}) {
     // {title,content,date_posted,author}
-    const {author, content, date_posted, id, title, views} = data;
+    const {author, content, date_posted, id, title, views,image} = data;
     const [isLiked,setIsLiked]=useState(data.is_liked);
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
@@ -102,7 +102,7 @@ export default function PostCard({data}) {
             />
             <CardMedia
                 className={classes.media}
-                image={postCardImage}
+                image={BASE_URL+image}
                 title="Paella dish"
             />
             <CardContent>

@@ -6,8 +6,8 @@ from Post.models import Post, Comment
 
 class PostDetailSerializer(serializers.ModelSerializer):
     class Meta:
-        model=Post
-        fields = ('id','title', 'image','content', 'date_posted', 'author', 'views')
+        model = Post
+        fields = ('id', 'title', 'image', 'content', 'date_posted', 'author', 'views')
 
     def create(self, validated_data):
         return Post.objects.create(**validated_data)
@@ -19,22 +19,23 @@ class PostDetailSerializer(serializers.ModelSerializer):
         return instance
 
     def to_representation(self, instance):
-        x=super().to_representation(instance)
-        user=self.context['user_who_asked']
+        x = super().to_representation(instance)
+        user = self.context['user_who_asked']
         x['is_liked'] = instance.likers.filter(pk=user.pk).exists()
-        x['views']=len(x['views'])
+        x['views'] = len(x['views'])
+        x['image'] = instance.image.url
         return x
 
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ('id','content', 'date_posted', 'author', )
+        fields = ('id', 'content', 'date_posted', 'author',)
 
     def to_representation(self, instance):
         x = super().to_representation(instance)
-        x['post_id'] =instance.post.id
-        if(instance.parent):
+        x['post_id'] = instance.post.id
+        if (instance.parent):
             x['parent'] = instance.parent.id
         else:
             x['parent'] = 0

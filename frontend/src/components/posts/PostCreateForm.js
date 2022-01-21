@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {AppBar, Button, Grid, Input, Paper, Typography, withStyles} from "@material-ui/core";
+import {AppBar, Button, Card, Grid, Input, Paper, Snackbar, Typography, withStyles} from "@material-ui/core";
 import selectMedia from "./selectMedia";
 import selectMediaFilter from "./selectMediaFilter";
 import {useTheme} from '@material-ui/core/styles';
@@ -7,7 +7,11 @@ import Box from "@material-ui/core/Box";
 import PropTypes from "prop-types";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import SwipeableViews from 'react-swipeable-views';
+import CardMedia from "@material-ui/core/CardMedia";
+import TextField from "@material-ui/core/TextField";
+import {urlMapper, POST_CREATE_URL} from "../utility/urlMapper";
+import myFetch from "../utility/myFetch";
+import {Alert} from "@material-ui/lab";
 const style = (theme) => ({
     root: {
         border: `8px solid ${theme.palette.common.white}`,
@@ -97,7 +101,13 @@ const PostCreateForm = ({classes}) => {
         event.preventDefault();
         // setValue(newValue);
     };
-
+    const [open, setOpen] = useState(false);
+const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
+    };
     const handleChangeIndex = (index) => {
         setValue(index);
     };
@@ -105,9 +115,31 @@ const PostCreateForm = ({classes}) => {
         event.preventDefault();
         setValue(Math.max(value - 1, 0));
     }
+     const [snackBar, setSnackBar] = useState({severity: "None", message: "None"});
     const handleSubmitButtonClicked = (event) => {
         event.preventDefault();
-        setValue(Math.min(value + 1, 2));
+        if (value === 2) {
+            const sendData={};
+            myFetch(urlMapper(POST_CREATE_URL),"POST",sendData)
+                .then((res)=>{
+                    if(!res.ok){
+                        setSnackBar({severity: "error", message: "could not create post"});
+                        return null;
+                    }
+                    return res.json();
+                }).then((data)=>{
+                    if(data){
+                        setSnackBar({severity: "succes", message: "post created successfully"});
+                    }
+                });
+        } else {
+            console.log("value" + value);
+            setValue(Math.min(value + 1, 2));
+        }
+    }
+    const [caption, setCaption] = useState("");
+    const handleCationChange = (event) => {
+        setCaption(event.target.value);
     }
     const [selectedFile, setSelectedFile] = useState(null);
     const [preview, setPreview] = useState("");
@@ -164,30 +196,63 @@ const PostCreateForm = ({classes}) => {
                                     <Tab label="Item Three" {...a11yProps(2)} />
                                 </Tabs>
                             </AppBar>
-                            <SwipeableViews
-                                axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                                index={value}
-                                onChangeIndex={handleChangeIndex}
-                            >
-                                <TabPanel value={value} index={0} dir={theme.direction}>
-
-
-                                    <label htmlFor="contained-button-file">
-                                        <Input onChange={onFileChange} accept="image/*" id="contained-button-file"
-                                               multiple type="file">
-                                        </Input>
-                                        <Button onClick={onFileUpload} variant="contained" component="span">
-                                            Upload
-                                        </Button>
-                                    </label>
-                                </TabPanel>
-                                <TabPanel value={value} index={1} dir={theme.direction}>
-                                    Item Two
-                                </TabPanel>
-                                <TabPanel value={value} index={2} dir={theme.direction}>
-                                    Item Three
-                                </TabPanel>
-                            </SwipeableViews>
+                            {/*<SwipeableViews*/}
+                            {/*    // axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}*/}
+                            {/*    index={value}*/}
+                            {/*    onChangeIndex={handleChangeIndex}*/}
+                            {/*>*/}
+                            <TabPanel value={value} index={0} dir={theme.direction}>
+                                <label htmlFor="contained-button-file">
+                                    <Input onChange={onFileChange} accept="image/*" id="contained-button-file"
+                                           multiple type="file">
+                                    </Input>
+                                    <Button onClick={onFileUpload} variant="contained" component="span">
+                                        Upload
+                                    </Button>
+                                </label>
+                            </TabPanel>
+                            <TabPanel value={value} index={1} dir={theme.direction}>
+                                <p>{preview}</p>
+                                {/*<img src={preview}/>*/}
+                                <Card>
+                                    <CardMedia
+                                        image={preview}
+                                        title="Contemplative Reptile"
+                                    />
+                                </Card>
+                            </TabPanel>
+                            <TabPanel value={value} index={2} dir={theme.direction}>
+                                {/*<TextField*/}
+                                {/*    // className={clsx((usernameValidity===true?classes.valid:classes.invalid))}*/}
+                                {/*    className={clsx(classes.textField)}*/}
+                                {/*    variant="outlined"*/}
+                                {/*    margin="normal"*/}
+                                {/*    value={caption}*/}
+                                {/*    required*/}
+                                {/*    fullWidth*/}
+                                {/*    id="caption"*/}
+                                {/*    label="Caption"*/}
+                                {/*    name="caption"*/}
+                                {/*    autoFocus*/}
+                                {/*    onChange={handleCationChange}*/}
+                                {/*/>*/}
+                                <TextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    value={caption}
+                                    required
+                                    fullWidth
+                                    id="caption"
+                                    label="Caption"
+                                    name="caption"
+                                    autoFocus
+                                    onChange={handleCationChange}
+                                    multiline
+                                    minRows={3}
+                                    maxRows={7}
+                                />
+                            </TabPanel>
+                            {/*</SwipeableViews>*/}
                         </div>
                     </form>
                 </Grid>
@@ -215,6 +280,11 @@ const PostCreateForm = ({classes}) => {
                     </Grid>
                 </Grid>
             </Grid>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity={snackBar.severity}>
+                    {snackBar.message}
+                </Alert>
+            </Snackbar>
         </Paper>
 
     );

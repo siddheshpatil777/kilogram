@@ -273,7 +273,6 @@ export default function Register() {
                 requestServerForValidity('email', email);
             }
         });
-
     };
 
     const handleClickShowPassword = () => {
@@ -335,7 +334,6 @@ export default function Register() {
                         autoComplete="current-email"
                         onChange={handleChange('email')}
                     />
-
                     <FormControl margin="normal" fullWidth variant="outlined">
                         <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
                         <OutlinedInput
@@ -363,9 +361,7 @@ export default function Register() {
                     </FormControl>
                     <FormControl className={clsx(classes.margin, classes.textField)} component="fieldset">
                         <FormLabel component="legend">Gender</FormLabel>
-                        <RadioGroup aria-label="gender" name="gender1" value={values.gender}
-                                    onChange={handleChange('gender')}>
-
+                        <RadioGroup aria-label="gender" name="gender1" value={values.gender} onChange={handleChange('gender')}>
                             <FormControlLabel value="female" control={<Radio/>} label="Female"/>
                             <FormControlLabel value="male" control={<Radio/>} label="Male"/>
                             <FormControlLabel value="other" control={<Radio/>} label="Other"/>
