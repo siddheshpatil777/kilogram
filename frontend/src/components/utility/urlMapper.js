@@ -52,7 +52,7 @@ const URL_MAP = [
     'api/post/dislike',
     'api/auth/user',
     'api/profile',
-    'api/post/create',
+    'api/post',
 ];
 export const urlMapper = (URL_HEADER) => {
     // console.log(URL_MAP);

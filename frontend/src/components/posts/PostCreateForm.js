@@ -116,30 +116,15 @@ const handleClose = (event, reason) => {
         setValue(Math.max(value - 1, 0));
     }
      const [snackBar, setSnackBar] = useState({severity: "None", message: "None"});
-    const handleSubmitButtonClicked = (event) => {
-        event.preventDefault();
-        if (value === 2) {
-            const sendData={};
-            myFetch(urlMapper(POST_CREATE_URL),"POST",sendData)
-                .then((res)=>{
-                    if(!res.ok){
-                        setSnackBar({severity: "error", message: "could not create post"});
-                        return null;
-                    }
-                    return res.json();
-                }).then((data)=>{
-                    if(data){
-                        setSnackBar({severity: "succes", message: "post created successfully"});
-                    }
-                });
-        } else {
-            console.log("value" + value);
-            setValue(Math.min(value + 1, 2));
-        }
+
+    
+    const [content, setContent] = useState("");
+    const handleCaptionChange = (event) => {
+        setContent(event.target.value);
     }
-    const [caption, setCaption] = useState("");
-    const handleCationChange = (event) => {
-        setCaption(event.target.value);
+    const [title, setTitle] = useState("");
+    const handleTitleChange = (event) => {
+        setTitle(event.target.value);
     }
     const [selectedFile, setSelectedFile] = useState(null);
     const [preview, setPreview] = useState("");
@@ -156,6 +141,36 @@ const handleClose = (event, reason) => {
     };
     const onFileUpload = (event) => {
 
+    }
+     const handleSubmitButtonClicked = (event) => {
+        event.preventDefault();
+        if (value === 2) {
+            // const sendData={
+            //     title:title,
+            //     content:content,
+            //     image:selectedFile,
+            // };
+            var sendData = new FormData()
+            sendData.append('title', title);
+            sendData.append('content', content);
+            sendData.append('image', selectedFile);
+
+            myFetch(urlMapper(POST_CREATE_URL),"POST",sendData,false)
+                .then((res)=>{
+                    if(!res.ok){
+                        setSnackBar({severity: "error", message: "could not create post"});
+                        return null;
+                    }
+                    return res.json();
+                }).then((data)=>{
+                    if(data){
+                        setSnackBar({severity: "succes", message: "post created successfully"});
+                    }
+                });
+        } else {
+            console.log("value" + value);
+            setValue(Math.min(value + 1, 2));
+        }
     }
     return (
 
@@ -222,31 +237,33 @@ const handleClose = (event, reason) => {
                                 </Card>
                             </TabPanel>
                             <TabPanel value={value} index={2} dir={theme.direction}>
-                                {/*<TextField*/}
-                                {/*    // className={clsx((usernameValidity===true?classes.valid:classes.invalid))}*/}
-                                {/*    className={clsx(classes.textField)}*/}
-                                {/*    variant="outlined"*/}
-                                {/*    margin="normal"*/}
-                                {/*    value={caption}*/}
-                                {/*    required*/}
-                                {/*    fullWidth*/}
-                                {/*    id="caption"*/}
-                                {/*    label="Caption"*/}
-                                {/*    name="caption"*/}
-                                {/*    autoFocus*/}
-                                {/*    onChange={handleCationChange}*/}
-                                {/*/>*/}
                                 <TextField
                                     variant="outlined"
                                     margin="normal"
-                                    value={caption}
+                                    value={title}
                                     required
                                     fullWidth
-                                    id="caption"
-                                    label="Caption"
-                                    name="caption"
+                                    id="title"
+                                    label="title"
+                                    name="title"
                                     autoFocus
-                                    onChange={handleCationChange}
+                                    onChange={handleTitleChange}
+                                    multiline
+                                    minRows={3}
+                                    maxRows={7}
+                                />
+                                
+                                <TextField
+                                    variant="outlined"
+                                    margin="normal"
+                                    value={content}
+                                    required
+                                    fullWidth
+                                    id="content"
+                                    label="content"
+                                    name="content"
+                                    autoFocus
+                                    onChange={handleCaptionChange}
                                     multiline
                                     minRows={3}
                                     maxRows={7}
