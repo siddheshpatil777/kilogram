@@ -154,7 +154,6 @@ const handleClose = (event, reason) => {
             sendData.append('title', title);
             sendData.append('content', content);
             sendData.append('image', selectedFile);
-
             myFetch(urlMapper(POST_CREATE_URL),"POST",sendData,false)
                 .then((res)=>{
                     if(!res.ok){

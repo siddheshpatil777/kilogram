@@ -197,6 +197,28 @@ def commentSection(request):
     post_id = data['post_id']
     Comment.objects.all().filter(post=post_id)
 
+class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [
+        permissions.IsAuthenticated
+    ]
+    queryset = Post.objects.all()
+    serializer_class = PostDetailSerializer
+    def get_queryset(self, id):
+        return Post.objects.all().filter(id=id)
+    def post(self, request, *args, **kwargs):
+        print(request.data)
+        data=request.data
+        post_id=int(data['post_id'])
+        parent_comment_id = int(data['parent_comment_id'])
+        content=str(data['content'])
+        post=Post.objects.get(id=post_id)
+        print(post)
+        parent_comment=None
+        if(parent_comment_id !=-1):
+            parent_comment=Comment.objects.filter(id=parent_comment_id)
+        new_comment=Comment(content=content,post=post,parent=parent_comment,author=request.user)
+        new_comment.save()
+        return JsonResponse({'success': True}, status=status.HTTP_200_OK)
 # @api_view(['GET', ])
 # def PostListView(request):
 #     # queryset = User.objects.all()

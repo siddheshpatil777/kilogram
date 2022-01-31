@@ -33,6 +33,11 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: "100",
         fontSize: "0.7rem",
     },
+     replyButtonText: {
+        marginLeft: "5px",
+        fontWeight: "100",
+        fontSize: "0.7rem",
+    },
 
 }));
 const MyComment = ({data, mapForTcom, level}) => {
@@ -71,7 +76,9 @@ const MyComment = ({data, mapForTcom, level}) => {
     let today = Date.now();
     let commentDate = Date.parse(data.date_posted);
     const timeSinceCommentPosted=timeDiffToString(today,commentDate);
-
+    const replyButtonPressed=(parent_comment_id)=>{
+        console.log("replyButtonPressed"+parent_comment_id);
+    };
     return (
         <div>
             <Grid container direction="row">
@@ -93,6 +100,11 @@ const MyComment = ({data, mapForTcom, level}) => {
                 </Grid>
                 <Typography fontWeight="fontWeightSmall" item noWrap className={classes.timestamp}>
                     {spacing}{timeSinceCommentPosted}
+                </Typography>
+                 <Typography fontWeight="fontWeightSmall" item noWrap className={classes.replyButtonText} onClick={()=>{
+                     replyButtonPressed(id);
+                 }}>
+                     Reply
                 </Typography>
 
 

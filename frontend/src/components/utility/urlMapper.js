@@ -14,6 +14,7 @@ export const POST_DISLIKE_URL=12;
 export const USER_URL=13;
 export const PROFILE_URL=14;
 export const POST_CREATE_URL=15;
+export const COMMENT_URL=16;
 
 
 
@@ -53,6 +54,7 @@ const URL_MAP = [
     'api/auth/user',
     'api/profile',
     'api/post',
+    'api/comment',
 ];
 export const urlMapper = (URL_HEADER) => {
     // console.log(URL_MAP);
