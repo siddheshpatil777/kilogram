@@ -24,6 +24,7 @@ class PostDetailSerializer(serializers.ModelSerializer):
         x['is_liked'] = instance.likers.filter(pk=user.pk).exists()
         x['views'] = len(x['views'])
         x['image'] = instance.image.url
+        x['author_name']=instance.author.username
         return x
 
 

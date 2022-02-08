@@ -15,13 +15,12 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import postCardImage from '../temp.png';
 import CommentSection from './CommentSection';
 import {BASE_URL} from "../METADATA"
-import useFetch from "../utility/useFetch";
-import CSRFToken from "../utility/csrftoken";
 import myFetch from "../utility/myFetch";
 import {POST_DISLIKE_URL, POST_LIKE_URL, urlMapper} from "../utility/urlMapper";
+import {Link} from "react-router-dom";
+
 const useStyles = makeStyles((theme) => ({
     root: {
         maxWidth: 1345,
@@ -50,27 +49,27 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PostCard({data}) {
     // {title,content,date_posted,author}
-    const {author, content, date_posted, id, title, views,image} = data;
-    const [isLiked,setIsLiked]=useState(data.is_liked);
+    const {author,author_name, content, date_posted, id, title, views, image} = data;
+    const [isLiked, setIsLiked] = useState(data.is_liked);
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
     const likeThisPost = () => {
-        myFetch(urlMapper(POST_LIKE_URL),"POST",{"post_id": id})
-            .then(res=>{
-                if(res.ok){
+        myFetch(urlMapper(POST_LIKE_URL), "POST", {"post_id": id})
+            .then(res => {
+                if (res.ok) {
                     setIsLiked(true);
                 }
             });
     };
     const dislikeThisPost = () => {
-        myFetch(urlMapper(POST_DISLIKE_URL), "POST",{"post_id": id}).then(res=>{
-                if(res.ok){
-                    setIsLiked(false);
-                }
-            });
+        myFetch(urlMapper(POST_DISLIKE_URL), "POST", {"post_id": id}).then(res => {
+            if (res.ok) {
+                setIsLiked(false);
+            }
+        });
     };
     const handleLikeButtonPressed = (e) => {
         e.preventDefault();
@@ -86,11 +85,15 @@ export default function PostCard({data}) {
     // console.log(author, content, date_posted, id, isLiked, title, views);
     return (
         <Card className={classes.root}>
+
             <CardHeader
                 avatar={
+                    <Link to={"/profile/" + author_name}>
                     <Avatar aria-label="recipe" className={classes.avatar}>
-                        R
-                    </Avatar>
+                            {author_name[0]}
+                          </Avatar>
+                    </Link>
+
                 }
                 action={
                     <IconButton aria-label="settings">
@@ -100,9 +103,10 @@ export default function PostCard({data}) {
                 title={title}
                 subheader={date_posted}
             />
+
             <CardMedia
                 className={classes.media}
-                image={BASE_URL+image}
+                image={BASE_URL + image}
                 title="Paella dish"
             />
             <CardContent>
