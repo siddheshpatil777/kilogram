@@ -6,11 +6,11 @@ const timeDiffToString=(time1,time2)=>{
         result = "just now";
     } else if (1.0 <= elaspedTime && elaspedTime < 60.0) {
         elaspedTime = elaspedTime | 0;
-        result = elaspedTime + "minutes ago";
+        result = elaspedTime + " minutes ago";
     } else if (60.0 <= elaspedTime && elaspedTime < 1440.0) {
         elaspedTime = elaspedTime / 60.0;
         elaspedTime = elaspedTime | 0;
-        result = elaspedTime + "hours ago";
+        result = elaspedTime + " hours ago";
     } else if (1440.0 <= elaspedTime && elaspedTime < 43200.0) {
         elaspedTime = elaspedTime / 60.0;
         elaspedTime = elaspedTime / 24.0;
@@ -26,7 +26,7 @@ const timeDiffToString=(time1,time2)=>{
     else {
         // elaspedTime=elaspedTime/60.0;
         // elaspedTime=elaspedTime | 0;
-        result = "long time ago";
+        result = "a long time ago";
     }
     return result;
 }

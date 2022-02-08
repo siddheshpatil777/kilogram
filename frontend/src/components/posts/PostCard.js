@@ -20,6 +20,7 @@ import {BASE_URL} from "../METADATA"
 import myFetch from "../utility/myFetch";
 import {POST_DISLIKE_URL, POST_LIKE_URL, urlMapper} from "../utility/urlMapper";
 import {Link} from "react-router-dom";
+import timeDiffToString from "../utility/timeDiffToString";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -101,7 +102,7 @@ export default function PostCard({data}) {
                     </IconButton>
                 }
                 title={title}
-                subheader={date_posted}
+                subheader={timeDiffToString(Date.now(),Date.parse(date_posted))}
             />
 
             <CardMedia
