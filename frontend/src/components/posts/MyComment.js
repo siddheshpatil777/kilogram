@@ -1,19 +1,15 @@
-import React, {Component, useState} from 'react';
-import {Paper} from "@material-ui/core";
-import Box from "@material-ui/core/Box";
+import React, {useState} from 'react';
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import {Fragment} from "react/cjs/react.production.min";
 import {makeStyles} from "@material-ui/core/styles";
-import {red} from "@material-ui/core/colors";
 import {Link} from "react-router-dom";
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import Button from "@material-ui/core/Button";
 import timeDiffToString from "../utility/timeDiffToString";
 import myFetch from "../utility/myFetch";
-import {BASE_URL} from "../METADATA";
 import {COMMENT_DISLIKE_URL, COMMENT_LIKE_URL, urlMapper} from "../utility/urlMapper";
+
 const useStyles = makeStyles((theme) => ({
     userName: {
         fontWeight: "700",
@@ -25,38 +21,38 @@ const useStyles = makeStyles((theme) => ({
     },
     commentContent: {
         // color:"red",
-         fontSize: "0.9rem",
-         fontWeight: "300",
+        fontSize: "0.9rem",
+        fontWeight: "300",
 
     },
     timestamp: {
         fontWeight: "100",
         fontSize: "0.7rem",
     },
-     replyButtonText: {
+    replyButtonText: {
         marginLeft: "5px",
         fontWeight: "100",
         fontSize: "0.7rem",
     },
 
 }));
-const MyComment = ({data, mapForTcom, level}) => {
-    const {id,content,date_posted,author,is_liked}=data;
-    const [isLiked,setIsLiked]=useState(is_liked);
+const MyComment = ({data, map,level}) => {
+    const {id, content, date_posted, author, is_liked} = data;
+    const [isLiked, setIsLiked] = useState(is_liked);
     const likeThisComment = () => {
-        myFetch(urlMapper(COMMENT_LIKE_URL),"POST",{"comment_id": id})
-            .then(res=>{
-                if(res.ok){
+        myFetch(urlMapper(COMMENT_LIKE_URL), "POST", {"comment_id": id})
+            .then(res => {
+                if (res.ok) {
                     setIsLiked(true);
                 }
             });
     };
     const dislikeThisComment = () => {
-        myFetch(urlMapper(COMMENT_DISLIKE_URL), "POST",{"comment_id": id}).then(res=>{
-                if(res.ok){
-                    setIsLiked(false);
-                }
-            });
+        myFetch(urlMapper(COMMENT_DISLIKE_URL), "POST", {"comment_id": id}).then(res => {
+            if (res.ok) {
+                setIsLiked(false);
+            }
+        });
     };
     const handleLikeButtonPressed = (e) => {
         e.preventDefault();
@@ -75,10 +71,19 @@ const MyComment = ({data, mapForTcom, level}) => {
     // console.log(data.date_posted);
     let today = Date.now();
     let commentDate = Date.parse(data.date_posted);
-    const timeSinceCommentPosted=timeDiffToString(today,commentDate);
-    const replyButtonPressed=(parent_comment_id)=>{
-        console.log("replyButtonPressed"+parent_comment_id);
+    const timeSinceCommentPosted = timeDiffToString(today, commentDate);
+    const replyButtonPressed = (parent_comment_id) => {
+        console.log("replyButtonPressed" + parent_comment_id);
     };
+    const _all_comments_in_order=[];
+    if (map.has(id) === true) {
+        map.get(id).map((child_comment) => {
+            let child_comment_instance = <MyComment key={child_comment.id} data={child_comment} map={map} level={1}/>;
+            _all_comments_in_order.push(child_comment_instance);
+            // _all_comments_in_order.push(child_comment.id);
+            // MyCommentMap.set(parent_comment.id, child_comment_instance);
+        });
+    }
     return (
         <div>
             <Grid container direction="row">
@@ -88,7 +93,6 @@ const MyComment = ({data, mapForTcom, level}) => {
                                        to={"/profile/" + data.author_name}>{data.author_name}</Link>&nbsp;
                     </Typography>
                     <Typography fontWeight="fontWeightMedium" item noWrap className={classes.commentContent}>
-
                         {data.content}
                     </Typography>
                 </Grid>
@@ -101,10 +105,11 @@ const MyComment = ({data, mapForTcom, level}) => {
                 <Typography fontWeight="fontWeightSmall" item noWrap className={classes.timestamp}>
                     {spacing}{timeSinceCommentPosted}
                 </Typography>
-                 <Typography fontWeight="fontWeightSmall" item noWrap className={classes.replyButtonText} onClick={()=>{
-                     replyButtonPressed(id);
-                 }}>
-                     Reply
+                <Typography fontWeight="fontWeightSmall" item noWrap className={classes.replyButtonText}
+                            onClick={() => {
+                                replyButtonPressed(id);
+                            }}>
+                    Reply
                 </Typography>
 
 
@@ -140,14 +145,22 @@ const MyComment = ({data, mapForTcom, level}) => {
             {/*</Box>*/}
             {/*<p></p>*/}
 
-            {mapForTcom.has(data.id) && mapForTcom.get(data.id).map((comment) => {
-                if (level == 0) {
-                    return (
-                        <MyComment key={comment.id} data={comment} mapForTcom={mapForTcom} level={level + 1}/>
-                    );
-                }
-            })}
+            {/*{mapForTcom.has(data.id) && mapForTcom.get(data.id).map((comment) => {*/}
+            {/*    if (level == 0) {*/}
+            {/*         let x=<MyComment key={comment.id} data={comment} mapForTcom={mapForTcom} level={level + 1}/>*/}
+            {/*        return (*/}
+            {/*           x*/}
+            {/*        );*/}
+            {/*    }*/}
+            {/*})}*/}
             {/*</Paper>*/}
+             <div>{
+                   _all_comments_in_order.map((that_comment)=>{
+                       return(
+                           that_comment
+                       );
+                   })
+               }</div>
         </div>
     );
 

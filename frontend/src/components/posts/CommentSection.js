@@ -5,12 +5,13 @@ import MyComment from "./MyComment";
 import {COMMENT_SECTION_URL,COMMENT_URL, POST_CREATE_URL, urlMapper} from "../utility/urlMapper";
 import {Button, Grid, TextField} from "@material-ui/core";
 import myFetch from "../utility/myFetch";
-
+import {DateComparator} from "../utility/utility";
 const CommentSection = ({post_id}) => {
     console.log("search for post id " + post_id);
     const {data, isPending, error} = useFetch(urlMapper(COMMENT_SECTION_URL) + "/" + post_id);
     const [commentWriteBoxStatus, setCommentWriteBoxStatus] = useState(null);
     const [replyData, setReplyData] = useState({parent_comment_id:-1,content:""});
+     const _all_comments_in_order=[];
     const onPostButtonClicked = (e) => {
         e.preventDefault();
         var sendData = new FormData()
@@ -43,20 +44,20 @@ const CommentSection = ({post_id}) => {
     if (data) {
         console.log("data recieved from coment section");
         console.log(data);
-        data.sort((a, b) => {
-            let a_date = new Date(a.date_posted);
-            let b_date = new Date(b.date_posted);
-            return a < b;
-        });
+        data.sort(DateComparator);
         data.forEach((comment) => {
-            // console.log(comment);
-            comment.child = [];
+             comment.child = [];
+            // if(comment.parent!==0){
+            //      comment.child = [];
+            // }
+            // console.log(comment)
         });
         let map = new Map();
         // parent=[];
         // for(let i=0;i<date.length;i++){
         //     parent.push([]);
         // }
+        // let childMap = new Map();
         data.forEach((comment) => {
             if (map.has(comment.parent) === true) {
                 let commentArray = map.get(comment.parent);
@@ -66,27 +67,38 @@ const CommentSection = ({post_id}) => {
                 map.set(comment.parent, [comment]);
             }
         });
+
+
+
         // console.log(data);
-        // console.log(map);
+        console.log(map);
         const mainComments = map.get(0);
-        console.log("mainComments =");
-        console.log(mainComments);
-
+        // console.log("mainComments =");
+        // console.log(mainComments);
         // {(commentWriteBoxStatus===null)?"":CommentBox}
-        if (mainComments) {
-            return (
-                mainComments.map((comment) => {
-                    return (
-                        <div>
-                            <MyComment key={comment.id} data={comment} mapForTcom={map} level={0}/>
-                        </div>
-                    )
-                })
 
-            );
+        let MyCommentMap = new Map();
+        if (mainComments) {
+             mainComments.map((parent_comment) => {
+                    let parent_comment_instance=<MyComment key={parent_comment.id} data={parent_comment} map={map} level={0}/>;
+                    // _all_comments_in_order.push(parent_comment.id);
+                    _all_comments_in_order.push(parent_comment_instance);
+                    // MyCommentMap.set(parent_comment.id,parent_comment_instance);
+                });
         }
 
+        // return (
+        //        <div>{
+        //            _all_comments_in_order.map((that_comment)=>{
+        //                return(
+        //                    that_comment
+        //                );
+        //            })
+        //        }</div>
+        //  );
+
     }
+    const [all_comments_in_order,set_all_comments_in_order]=useState(_all_comments_in_order);
     return (
         // {CommentBox}
         <div>
@@ -125,7 +137,14 @@ const CommentSection = ({post_id}) => {
                 {/*</Grid>*/}
             </Grid>
 
-            <h3>be the first to post comment</h3>
+            {/*<h3>be the first to post comment</h3>*/}
+             <div>{
+                   _all_comments_in_order.map((that_comment)=>{
+                       return(
+                           that_comment
+                       );
+                   })
+             }</div>
         </div>
 
     );

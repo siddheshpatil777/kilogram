@@ -25,4 +25,9 @@ export const isEmpty=(obj)=>{
 
     return true;
 }
-export default {delay,isEmpty};
+const DateComparator=(a, b) => {
+            let a_date = new Date(a.date_posted);
+            let b_date = new Date(b.date_posted);
+            return a < b;
+        }
+export default {delay,isEmpty,DateComparator};
