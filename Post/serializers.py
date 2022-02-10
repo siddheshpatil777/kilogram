@@ -39,7 +39,7 @@ class CommentSerializer(serializers.ModelSerializer):
         if (instance.parent):
             x['parent'] = instance.parent.id
         else:
-            x['parent'] = 0
+            x['parent'] = -1
         x['author_name'] = instance.author.username
         user = self.context['user_who_asked']
         x['is_liked'] = instance.likers.filter(pk=user.pk).exists()

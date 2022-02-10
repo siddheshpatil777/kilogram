@@ -214,9 +214,11 @@ class CommentDetailView(generics.RetrieveUpdateDestroyAPIView):
         post=Post.objects.get(id=post_id)
         print(post)
         parent_comment=None
-        if(parent_comment_id !=-1):
-            parent_comment=Comment.objects.filter(id=parent_comment_id)
-        new_comment=Comment(content=content,post=post,parent=parent_comment,author=request.user)
+        if(parent_comment_id !=-1 ):
+            parent_comment=Comment.objects.get(id=parent_comment_id)
+            new_comment = Comment(content=content, post=post, parent=parent_comment, author=request.user)
+        else:
+            new_comment=Comment(content=content,post=post,author=request.user)
         new_comment.save()
         return JsonResponse({'success': True}, status=status.HTTP_200_OK)
 # @api_view(['GET', ])

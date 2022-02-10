@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
     },
 
 }));
-const MyComment = ({data, map,level}) => {
+const MyComment = ({parent_comment_id,data, map,level,onReplyButtonClicked}) => {
     const {id, content, date_posted, author, is_liked} = data;
     const [isLiked, setIsLiked] = useState(is_liked);
     const likeThisComment = () => {
@@ -72,13 +72,10 @@ const MyComment = ({data, map,level}) => {
     let today = Date.now();
     let commentDate = Date.parse(data.date_posted);
     const timeSinceCommentPosted = timeDiffToString(today, commentDate);
-    const replyButtonPressed = (parent_comment_id) => {
-        console.log("replyButtonPressed" + parent_comment_id);
-    };
     const _all_comments_in_order=[];
     if (map.has(id) === true) {
         map.get(id).map((child_comment) => {
-            let child_comment_instance = <MyComment key={child_comment.id} data={child_comment} map={map} level={1}/>;
+            let child_comment_instance = <MyComment key={child_comment.id}  parent_comment_id={id} data={child_comment} map={map} level={1} onReplyButtonClicked={onReplyButtonClicked}/>;
             _all_comments_in_order.push(child_comment_instance);
             // _all_comments_in_order.push(child_comment.id);
             // MyCommentMap.set(parent_comment.id, child_comment_instance);
@@ -107,7 +104,7 @@ const MyComment = ({data, map,level}) => {
                 </Typography>
                 <Typography fontWeight="fontWeightSmall" item noWrap className={classes.replyButtonText}
                             onClick={() => {
-                                replyButtonPressed(id);
+                               onReplyButtonClicked(parent_comment_id);
                             }}>
                     Reply
                 </Typography>

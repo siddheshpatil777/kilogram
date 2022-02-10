@@ -136,10 +136,8 @@ export default function PostCard({data}) {
             <Collapse in={expanded} timeout="auto" unmountOnExit>
                 <CardContent>
                     <Typography paragraph>Method:</Typography>
-
                     <Typography paragraph>
                         {content}
-
                     </Typography>
                     <CommentSection post_id={id}/>
 
